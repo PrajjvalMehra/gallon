@@ -7,6 +7,7 @@ A water tracking app for cross-platform mobile devices to help users track their
 # Group 13
 
 -   Prajjval Mehra
+-   Kris Libre
 
 ---
 
