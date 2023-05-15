@@ -8,6 +8,7 @@ A water tracking app for cross-platform mobile devices to help users track their
 
 -   Prajjval Mehra
 -   Kris Libre
+-   Pemitha Randiya
 
 ---
 
