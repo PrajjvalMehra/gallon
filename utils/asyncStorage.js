@@ -5,6 +5,7 @@ async function checkOnboarding() {
         const value = await AsyncStorage.getItem("onboarding");
         if (value == null) {
             await AsyncStorage.setItem("onboarding", "false");
+            await AsyncStorage.setItem("goal", 0);
         }
         return value;
     } catch (e) {

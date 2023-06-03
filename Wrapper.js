@@ -14,6 +14,8 @@ function Wrapper() {
         dbSetup();
         async function fetchOnboardingData() {
             const onboarding = await checkOnboarding();
+
+            // Set onboarding === true to true after testing
             if (onboarding === "false") {
                 createTodayRow();
                 testQuery();

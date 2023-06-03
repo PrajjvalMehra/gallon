@@ -3,7 +3,7 @@ import { db } from "../utils/db";
 const dbSetup = () => {
     db.transaction((tx) => {
         tx.executeSql(
-            "CREATE TABLE IF NOT EXISTS data (id INTEGER PRIMARY KEY AUTOINCREMENT, date TEXT, intake TEXT);"
+            "CREATE TABLE IF NOT EXISTS data (id INTEGER PRIMARY KEY AUTOINCREMENT, date TEXT, intake INTEGER, goal INTEGER);"
         );
     });
 };
@@ -20,8 +20,8 @@ const createTodayRow = async () => {
                 if (rows.length === 0 || rows._array[0].date !== date) {
                     db.transaction((tx) => {
                         tx.executeSql(
-                            "INSERT INTO data (date, intake) VALUES (?, ?)",
-                            [date, "0"]
+                            "INSERT INTO data (date, intake, goal) VALUES (?, ?, ?)",
+                            [date, 0, 0]
                         );
                     });
                 }
@@ -39,7 +39,7 @@ const testQuery = async () => {
     await db.transaction((tx) => {
         tx.executeSql("SELECT * FROM data", [], (_, { rows }) => {
             for (let i = 0; i < rows.length; i++) {
-                console.log(rows._array[i].date, "row");
+                console.log(rows._array[i], "row");
             }
         });
     });
