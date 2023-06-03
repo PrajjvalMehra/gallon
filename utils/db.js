@@ -1,5 +1,5 @@
 import * as SQLite from "expo-sqlite";
 
-const db = SQLite.openDatabase("gallon.db");
+const db = SQLite.openDatabase("gallonV1.db");
 
 export { db };
