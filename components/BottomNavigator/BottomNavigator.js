@@ -1,6 +1,7 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Home from "../../screens/Home/Home";
 import Settings from "../../screens/Settings/Settings";
+import FirstLaunch from "../../screens/FirstLaunch/FirstLaunch";
 import AppContext from "../../Context/AppContext";
 ("../../Context/AppProvider");
 import React from "react";
@@ -21,6 +22,8 @@ function BottomNavigator() {
                 },
             }}
         >
+
+            <Tab.Screen name="FirstLaunch" component={FirstLaunch} />
             <Tab.Screen name="Home" component={Home} />
             <Tab.Screen name="Settings" component={Settings} />
         </Tab.Navigator>
