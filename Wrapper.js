@@ -1,13 +1,13 @@
-import { StatusBar } from "expo-status-bar";
 import BottomNavigator from "./components/BottomNavigator/BottomNavigator";
 import { NavigationContainer } from "@react-navigation/native";
-import { NativeBaseProvider } from "native-base";
-import AppContext from "./Context/AppContext";
 import { dbSetup, createTodayRow, testQuery } from "./queries/tableSetup";
-
+import FirstLaunch from "./screens/FirstLaunch/FirstLaunch";
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { checkOnboarding } from "./utils/asyncStorage";
 
 import React from "react";
+
+const Stack = createNativeStackNavigator();
 
 function Wrapper() {
     React.useEffect(() => {
@@ -24,15 +24,13 @@ function Wrapper() {
 
         fetchOnboardingData();
     }, []);
-
-    const { statusBarColor } = React.useContext(AppContext);
     return (
-        <NativeBaseProvider>
-            <NavigationContainer>
-                <BottomNavigator />
-                <StatusBar style={statusBarColor} />
-            </NavigationContainer>
-        </NativeBaseProvider>
+        <NavigationContainer>
+            <Stack.Navigator>
+                <Stack.Screen name="Onboarding" component={FirstLaunch} />
+                <Stack.Screen name="Home" component={BottomNavigator} />
+            </Stack.Navigator>
+        </NavigationContainer>
     );
 }
 
