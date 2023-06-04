@@ -4,6 +4,10 @@ import Settings from "../../screens/Settings/Settings";
 import AppContext from "../../Context/AppContext";
 ("../../Context/AppProvider");
 import React from "react";
+import History from "../../screens/History/History";
+import { Ionicons } from "@expo/vector-icons";
+import { MaterialIcons } from "@expo/vector-icons";
+
 const Tab = createBottomTabNavigator();
 
 function BottomNavigator() {
@@ -21,8 +25,37 @@ function BottomNavigator() {
                 },
             }}
         >
-            <Tab.Screen name="Home" component={Home} />
-            <Tab.Screen name="Settings" component={Settings} />
+            <Tab.Screen
+                name="History"
+                options={{
+                    tabBarIcon: ({ color, size }) => (
+                        <MaterialIcons
+                            name="history"
+                            size={size}
+                            color={color}
+                        />
+                    ),
+                }}
+                component={History}
+            />
+            <Tab.Screen
+                name="Home"
+                options={{
+                    tabBarIcon: ({ color, size }) => (
+                        <Ionicons name="home" size={size} color={color} />
+                    ),
+                }}
+                component={Home}
+            />
+            <Tab.Screen
+                name="Settings"
+                options={{
+                    tabBarIcon: ({ color, size }) => (
+                        <Ionicons name="ios-cog" size={size} color={color} />
+                    ),
+                }}
+                component={Settings}
+            />
         </Tab.Navigator>
     );
 }
