@@ -1,4 +1,3 @@
-import { StatusBar } from "expo-status-bar";
 import BottomNavigator from "./components/BottomNavigator/BottomNavigator";
 
 import { NativeBaseProvider } from "native-base";
@@ -6,7 +5,10 @@ import AppContext from "./Context/AppContext";
 import { dbSetup, createTodayRow, testQuery } from "./queries/tableSetup";
 
 import { checkOnboarding, setGoal, setUnit } from "./utils/asyncStorage";
+
 import React from "react";
+
+const Stack = createNativeStackNavigator();
 
 function Wrapper() {
     const { appState } = React.useContext(AppContext);
@@ -34,6 +36,7 @@ function Wrapper() {
             <BottomNavigator />
             <StatusBar style={statusBarColor} />
         </NativeBaseProvider>
+
     );
 }
 

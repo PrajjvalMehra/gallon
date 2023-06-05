@@ -1,6 +1,9 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Home from "../../screens/Home/Home";
 import Settings from "../../screens/Settings/Settings";
+import { StatusBar } from "expo-status-bar";
+import { NavigationContainer } from "@react-navigation/native";
+import { NativeBaseProvider } from "native-base";
 import AppContext from "../../Context/AppContext";
 ("../../Context/AppProvider");
 import React from "react";
@@ -11,22 +14,23 @@ import { MaterialIcons } from "@expo/vector-icons";
 const Tab = createBottomTabNavigator();
 
 function BottomNavigator() {
-    const { bg, textColor } = React.useContext(AppContext);
-
+    const { bg, textColor, statusBarColor } = React.useContext(AppContext);
     return (
-        <Tab.Navigator
-            screenOptions={{
-                headerStyle: {
-                    backgroundColor: bg,
-                },
-                headerTintColor: textColor,
-                tabBarStyle: {
-                    backgroundColor: bg,
-                },
-                tabBarActiveTintColor: "#0891b2",
+        <NativeBaseProvider>
+            <NavigationContainer independent={true}>
+                <Tab.Navigator
+                    screenOptions={{
+                        headerStyle: {
+                            backgroundColor: bg,
+                        },
+                        headerTintColor: textColor,
+                        tabBarStyle: {
+                            backgroundColor: bg,
+                        },
+                        tabBarActiveTintColor: "#0891b2",
             }}
-        >
-            <Tab.Screen
+                >
+                    <Tab.Screen
                 name="History"
                 options={{
                     tabBarIcon: ({ color, size }) => (
@@ -48,7 +52,7 @@ function BottomNavigator() {
                 }}
                 component={Home}
             />
-            <Tab.Screen
+                    <Tab.Screen
                 name="Settings"
                 options={{
                     tabBarIcon: ({ color, size }) => (
@@ -57,7 +61,11 @@ function BottomNavigator() {
                 }}
                 component={Settings}
             />
-        </Tab.Navigator>
+                </Tab.Navigator>
+                <StatusBar style={statusBarColor} />
+            </NavigationContainer>
+        </NativeBaseProvider>
+
     );
 }
 
