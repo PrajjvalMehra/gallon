@@ -1,4 +1,4 @@
-import { Button, ScrollView, View } from "native-base";
+import { Button, View } from "native-base";
 import { Text, VStack, Heading, HStack } from "native-base";
 import { AnimatedCircularProgress } from "react-native-circular-progress";
 import React from "react";
@@ -33,14 +33,17 @@ function Home() {
         fetchProgress();
         fetchGoal();
         fetchUnit();
-        progressCircle();
+        if (progress && goal) {
+            progressCircle();
+        }
+
         console.log(unit, goal, progress);
     }, [progress]);
     const progressCircle = () => {
         console.log("sdf", progress, goal);
         const fill = Math.ceil((progress * 100) / goal);
         console.log("sdf", fill);
-        return fill;
+        setFill(fill);
     };
     const increaseProgress = (value) => {
         console.log(typeof progress, "value");
@@ -48,7 +51,7 @@ function Home() {
         setProgress(progress + value);
     };
     return (
-        <ScrollView style={styles.container}>
+        <View style={styles.container}>
             <VStack>
                 <View style={styles.headerContainer}>
                     <Heading>{new Date().toDateString()}</Heading>
@@ -57,7 +60,7 @@ function Home() {
                     <AnimatedCircularProgress
                         size={260}
                         width={30}
-                        fill={progressCircle()}
+                        fill={fill}
                         tintColor="#a5f3fc"
                         lineCap="round"
                         rotation={0}
@@ -70,72 +73,74 @@ function Home() {
                     </AnimatedCircularProgress>
                 </View>
                 <View style={styles.actionsContainer}>
-                    <View style={styles.buttonContainer}>
-                        <Button
-                            styles={styles.modifyButton}
-                            onPress={(e) => increaseProgress(250)}
-                            // marginRight={"2.5%"}
-                            bgColor={"primary.200"}
-                            borderRadius={10}
-                            _pressed={{ bg: "primary.300" }}
-                            variant={"subtle"}
-                            rightIcon={
-                                <MaterialCommunityIcons
-                                    name="cup-water"
-                                    size={24}
-                                    color="black"
-                                />
-                            }
-                        >
-                            <Text>
-                                250
-                                {unit}
-                            </Text>
-                        </Button>
-                    </View>
-                    <View style={styles.buttonContainer}>
-                        <Button
-                            styles={styles.modifyButton}
-                            onPress={(e) => increaseProgress(500)}
-                            // marginRight={"2.5%"}
-                            borderRadius={10}
-                            bgColor={"primary.300"}
-                            _pressed={{ bg: "primary.400" }}
-                            variant={"subtle"}
-                            endIcon={
-                                <MaterialCommunityIcons
-                                    name="bottle-wine-outline"
-                                    size={24}
-                                    color="black"
-                                />
-                            }
-                        >
-                            <Text>
-                                500
-                                {unit}
-                            </Text>
-                        </Button>
-                    </View>
-                    <View style={styles.buttonContainer}>
-                        <Button
-                            styles={styles.modifyButton}
-                            bgColor={"primary.400"}
-                            _pressed={{ bg: "primary.500" }}
-                            onPress={increaseProgress}
-                            // marginRight={"2.5%"}
-                            borderRadius={10}
-                            variant={"subtle"}
-                            rightIcon={
-                                <Ionicons
-                                    name="ios-water-outline"
-                                    size={22}
-                                    color="black"
-                                />
-                            }
-                        >
-                            <Text>Custom</Text>
-                        </Button>
-                    </View>
+                    <HStack>
+                        <View style={styles.buttonContainer}>
+                            <Button
+                                styles={styles.modifyButton}
+                                onPress={(e) => increaseProgress(250)}
+                                marginRight={"2.5%"}
+                                bgColor={"primary.100"}
+                                borderRadius={10}
+                                _pressed={{ bg: "primary.200" }}
+                                variant={"subtle"}
+                                rightIcon={
+                                    <MaterialCommunityIcons
+                                        name="cup-water"
+                                        size={24}
+                                        color="black"
+                                    />
+                                }
+                            >
+                                <Text>
+                                    250
+                                    {unit}
+                                </Text>
+                            </Button>
+                        </View>
+                        <View style={styles.buttonContainer}>
+                            <Button
+                                styles={styles.modifyButton}
+                                onPress={increaseProgress}
+                                marginRight={"2.5%"}
+                                borderRadius={10}
+                                bgColor={"primary.200"}
+                                _pressed={{ bg: "primary.300" }}
+                                variant={"subtle"}
+                                endIcon={
+                                    <MaterialCommunityIcons
+                                        name="bottle-wine-outline"
+                                        size={24}
+                                        color="black"
+                                    />
+                                }
+                            >
+                                <Text>
+                                    500
+                                    {unit}
+                                </Text>
+                            </Button>
+                        </View>
+                        <View style={styles.buttonContainer}>
+                            <Button
+                                styles={styles.modifyButton}
+                                bgColor={"primary.300"}
+                                _pressed={{ bg: "primary.400" }}
+                                onPress={increaseProgress}
+                                marginRight={"2.5%"}
+                                borderRadius={10}
+                                variant={"subtle"}
+                                rightIcon={
+                                    <Ionicons
+                                        name="ios-water-outline"
+                                        size={22}
+                                        color="black"
+                                    />
+                                }
+                            >
+                                <Text>Custom</Text>
+                            </Button>
+                        </View>
+                    </HStack>
                 </View>
                 <View style={styles.dataContainer}>
                     <VStack space={2}>
@@ -147,7 +152,7 @@ function Home() {
                     </VStack>
                 </View>
             </VStack>
-        </ScrollView>
+        </View>
     );
 }
 
@@ -160,11 +165,8 @@ const styles = StyleSheet.create({
         paddingTop: 30,
     },
     actionsContainer: {
-        display: "flex",
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
         marginTop: 30,
+        width: "100%",
     },
     progressContainer: {
         justifyContent: "center",
@@ -176,7 +178,7 @@ const styles = StyleSheet.create({
         marginBottom: 30,
     },
     buttonContainer: {
-        // width: "33.3%",
+        width: "33.3%",
     },
     dataContainer: {
         backgroundColor: "white",
