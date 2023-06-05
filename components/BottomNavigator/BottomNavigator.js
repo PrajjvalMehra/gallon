@@ -65,7 +65,6 @@ function BottomNavigator() {
                 <StatusBar style={statusBarColor} />
             </NavigationContainer>
         </NativeBaseProvider>
-
     );
 }
 
