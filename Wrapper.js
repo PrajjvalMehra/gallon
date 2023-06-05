@@ -2,7 +2,7 @@ import BottomNavigator from "./components/BottomNavigator/BottomNavigator";
 import { NavigationContainer } from "@react-navigation/native";
 import { dbSetup, createTodayRow, testQuery } from "./queries/tableSetup";
 
-import { checkOnboarding, setGoal, setUnit } from "./utils/asyncStorage";
+import { checkOnboarding, setOnboardung, setGoal, setUnit } from "./utils/asyncStorage";
 import FirstLaunch from "./screens/FirstLaunch/FirstLaunch";
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
@@ -10,7 +10,11 @@ import React from "react";
 
 const Stack = createNativeStackNavigator();
 
+
 function Wrapper() {
+
+    const [firstLaunch, setFirstLaunch] = React.useState(null);
+
     React.useEffect(() => {
         dbSetup();
         async function fetchOnboardingData() {
@@ -20,20 +24,28 @@ function Wrapper() {
 
             // Set onboarding === true to true after testing
             if (onboarding === "false") {
+                setFirstLaunch(true);
+                await setOnboardung();
                 createTodayRow();
                 testQuery();
+            } else {
+                setFirstLaunch(false);
             }
         }
 
         fetchOnboardingData();
     }, []);
     return (
-        <NavigationContainer>
-            <Stack.Navigator>
-                <Stack.Screen options={{ headerShown: false }} name="Onboarding" component={FirstLaunch} />
-                <Stack.Screen name="Home" component={BottomNavigator} />
-            </Stack.Navigator>
-        </NavigationContainer>
+        firstLaunch != null && (
+            <NavigationContainer>
+                <Stack.Navigator>
+                    {firstLaunch && (
+                        <Stack.Screen options={{ headerShown: false }} name="Onboarding" component={FirstLaunch} />
+                    )}
+                    <Stack.Screen name="Home" component={BottomNavigator} />
+                </Stack.Navigator>
+            </NavigationContainer>
+        )
     );
 }
 
