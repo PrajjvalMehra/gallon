@@ -30,7 +30,6 @@ function FirstLaunch({ navigation }) {
         />
         )
     }
-
     return (
         <Onboarding
             //To handle the navigation to the Homepage if Skip is clicked

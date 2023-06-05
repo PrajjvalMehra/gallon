@@ -24,7 +24,6 @@ async function setOnboardung() {
     }
 }
 
-
 async function setUnit() {
     try {
         const value = await AsyncStorage.getItem("unit");
@@ -76,6 +75,5 @@ async function getUnit() {
     }
 }
 
-
-export { checkOnboarding, setOnboardung,setUnit, getUnit, setGoal, getGoal, modifyGoal };
+export { checkOnboarding, setOnboardung, setUnit, getUnit, setGoal, getGoal, modifyGoal };
 

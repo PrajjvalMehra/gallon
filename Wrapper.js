@@ -1,8 +1,9 @@
 import BottomNavigator from "./components/BottomNavigator/BottomNavigator";
-import { NavigationContainer } from "@react-navigation/native";
+
 import { NativeBaseProvider } from "native-base";
 import AppContext from "./Context/AppContext";
 import { dbSetup, createTodayRow, testQuery } from "./queries/tableSetup";
+
 
 import {
     checkOnboarding,
@@ -13,7 +14,7 @@ import {
 import FirstLaunch from "./screens/FirstLaunch/FirstLaunch";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
-import React from "react";
+
 
 const Stack = createNativeStackNavigator();
 
@@ -21,12 +22,12 @@ function Wrapper() {
     const [firstLaunch, setFirstLaunch] = React.useState(null);
 
     const { appState } = React.useContext(AppContext);
-
     React.useEffect(() => {
         async function fetchOnboardingData() {
             const onboarding = await checkOnboarding();
             await setGoal("2500");
             await setUnit();
+
 
             // Set onboarding === true to false after testing
             // if (onboarding === "false") {
