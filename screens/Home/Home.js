@@ -96,7 +96,7 @@ function Home() {
                     <View style={styles.buttonContainer}>
                         <Button
                             styles={styles.modifyButton}
-                            onPress={increaseProgress}
+                            onPress={(e) => increaseProgress(500)}
                             // marginRight={"2.5%"}
                             borderRadius={10}
                             bgColor={"primary.300"}
