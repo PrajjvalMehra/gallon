@@ -37,6 +37,7 @@ const testQuery = async () => {
     // console.log("Table cleared successfully.");
 
     await db.transaction((tx) => {
+        testQuery2();
         tx.executeSql("SELECT * FROM data", [], (_, { rows }) => {
             for (let i = 0; i < rows.length; i++) {
                 console.log(rows._array[i], "row");
@@ -45,4 +46,29 @@ const testQuery = async () => {
     });
 };
 
-export { dbSetup, createTodayRow, testQuery };
+const testQuery2 = async () => {
+    await db.transaction((tx) => {
+        tx.executeSql("SELECT * FROM data", [], (_, { rows }) => {
+            console.log(rows._array[0], "test");
+        });
+    });
+};
+
+const executeQuery = async (sql, params = []) => {
+    return new Promise((resolve, reject) => {
+        db.transaction((transaction) => {
+            transaction.executeSql(
+                sql,
+                params,
+                (transaction, results) => {
+                    resolve(results);
+                },
+                (transaction, error) => {
+                    reject(error);
+                }
+            );
+        });
+    });
+};
+
+export { dbSetup, createTodayRow, testQuery, testQuery2, executeQuery };
