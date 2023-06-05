@@ -4,24 +4,39 @@ import { NativeBaseProvider } from "native-base";
 import AppContext from "./Context/AppContext";
 import { dbSetup, createTodayRow, testQuery } from "./queries/tableSetup";
 
-import { checkOnboarding, setGoal, setUnit } from "./utils/asyncStorage";
+
+import { checkOnboarding, setOnboardung, setGoal, setUnit } from "./utils/asyncStorage";
+import FirstLaunch from "./screens/FirstLaunch/FirstLaunch";
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+
 
 import React from "react";
 
 const Stack = createNativeStackNavigator();
 
+
 function Wrapper() {
+
+
+    const [firstLaunch, setFirstLaunch] = React.useState(null);
+
     const { appState } = React.useContext(AppContext);
+
     React.useEffect(() => {
         async function fetchOnboardingData() {
             const onboarding = await checkOnboarding();
             await setGoal("2500");
             await setUnit();
 
-            // Set onboarding === true to true after testing
-            if (onboarding === "false") {
+            // Set onboarding === true to false after testing
+            // if (onboarding === "false") {
+            if (onboarding === "true") {
+                setFirstLaunch(true);
+                await setOnboardung();
                 createTodayRow();
                 testQuery();
+            } else {
+                setFirstLaunch(false);
             }
         }
 
@@ -32,10 +47,16 @@ function Wrapper() {
 
     const { statusBarColor } = React.useContext(AppContext);
     return (
-        <NativeBaseProvider>
-            <BottomNavigator />
-            <StatusBar style={statusBarColor} />
-        </NativeBaseProvider>
+        firstLaunch != null && (
+            <NavigationContainer>
+                <Stack.Navigator>
+                    {firstLaunch && (
+                        <Stack.Screen options={{ headerShown: false }} name="Onboarding" component={FirstLaunch} />
+                    )}
+                    <Stack.Screen name="Home" component={BottomNavigator} />
+                </Stack.Navigator>
+            </NavigationContainer>
+        )
 
     );
 }

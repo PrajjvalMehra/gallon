@@ -12,6 +12,19 @@ async function checkOnboarding() {
     }
 }
 
+async function setOnboardung() {
+    try {
+        const value = await AsyncStorage.getItem("onboarding");
+        if (value != null) {
+            await AsyncStorage.setItem("onboarding", "true");
+        }
+        return value;
+    } catch (e) {
+        // error reading value
+    }
+}
+
+
 async function setUnit() {
     try {
         const value = await AsyncStorage.getItem("unit");
@@ -63,4 +76,6 @@ async function getUnit() {
     }
 }
 
-export { checkOnboarding, setUnit, getUnit, setGoal, getGoal, modifyGoal };
+
+export { checkOnboarding, setOnboardung,setUnit, getUnit, setGoal, getGoal, modifyGoal };
+
