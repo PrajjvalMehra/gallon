@@ -1,23 +1,23 @@
 import BottomNavigator from "./components/BottomNavigator/BottomNavigator";
-
+import { NavigationContainer } from "@react-navigation/native";
 import { NativeBaseProvider } from "native-base";
 import AppContext from "./Context/AppContext";
 import { dbSetup, createTodayRow, testQuery } from "./queries/tableSetup";
 
-
-import { checkOnboarding, setOnboardung, setGoal, setUnit } from "./utils/asyncStorage";
+import {
+    checkOnboarding,
+    setOnboardung,
+    setGoal,
+    setUnit,
+} from "./utils/asyncStorage";
 import FirstLaunch from "./screens/FirstLaunch/FirstLaunch";
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import React from "react";
 
 const Stack = createNativeStackNavigator();
 
-
 function Wrapper() {
-
-
     const [firstLaunch, setFirstLaunch] = React.useState(null);
 
     const { appState } = React.useContext(AppContext);
@@ -48,16 +48,21 @@ function Wrapper() {
     const { statusBarColor } = React.useContext(AppContext);
     return (
         firstLaunch != null && (
-            <NavigationContainer>
-                <Stack.Navigator>
-                    {firstLaunch && (
-                        <Stack.Screen options={{ headerShown: false }} name="Onboarding" component={FirstLaunch} />
-                    )}
-                    <Stack.Screen name="Home" component={BottomNavigator} />
-                </Stack.Navigator>
-            </NavigationContainer>
+            <Stack.Navigator>
+                {firstLaunch && (
+                    <Stack.Screen
+                        options={{ headerShown: false }}
+                        name="Onboarding"
+                        component={FirstLaunch}
+                    />
+                )}
+                <Stack.Screen
+                    name="Home"
+                    options={{ headerShown: false }}
+                    component={BottomNavigator}
+                />
+            </Stack.Navigator>
         )
-
     );
 }
 
