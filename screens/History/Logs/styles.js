@@ -9,7 +9,7 @@ export default StyleSheet.create({
     H1: {
         fontSize: 20
         ,
-        color: 'blue',
+        color: '#0891b2',
         fontWeight: 'bold',
     },
     flexContainer: {
@@ -19,8 +19,8 @@ export default StyleSheet.create({
     },
     flexRow: {
      height: 20,
+     textAlignVertical: 'center',
+    },
 
-        
-    }
 
 });
