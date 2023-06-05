@@ -5,7 +5,7 @@ import { NativeBaseProvider } from "native-base";
 import AppContext from "./Context/AppContext";
 import { dbSetup, createTodayRow, testQuery } from "./queries/tableSetup";
 
-import { checkOnboarding } from "./utils/asyncStorage";
+import { checkOnboarding, setGoal, setUnit } from "./utils/asyncStorage";
 
 import React from "react";
 
@@ -14,6 +14,8 @@ function Wrapper() {
         dbSetup();
         async function fetchOnboardingData() {
             const onboarding = await checkOnboarding();
+            await setGoal();
+            await setUnit();
 
             // Set onboarding === true to true after testing
             if (onboarding === "false") {
