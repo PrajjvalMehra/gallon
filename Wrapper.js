@@ -23,7 +23,8 @@ function Wrapper() {
             await setUnit();
 
             // Set onboarding === true to true after testing
-            if (onboarding === "false") {
+            // if (onboarding === "false") {
+            if (onboarding === "true") {
                 setFirstLaunch(true);
                 await setOnboardung();
                 createTodayRow();

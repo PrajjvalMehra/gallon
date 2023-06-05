@@ -2,13 +2,11 @@ import { StyleSheet } from "react-native";
 
 
 export default StyleSheet.create({
-    
     container: {
         padding: 20,
     },
     H1: {
-        fontSize: 20
-        ,
+        fontSize: 20,
         color: '#0891b2',
         fontWeight: 'bold',
     },
@@ -21,6 +19,4 @@ export default StyleSheet.create({
      height: 20,
      textAlignVertical: 'center',
     },
-
-
 });
