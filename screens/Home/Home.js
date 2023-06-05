@@ -197,8 +197,8 @@ function Home() {
                         <VStack space={2}>
                             <Heading>Today's Progress</Heading>
                             <Text fontSize={"3xl"}>
-                                {progress} / {goal}{" "}
-                                <Text fontSize={"2xl"}>{unit}</Text>
+                                <Text color={"primary.600"}>{progress}</Text> /{" "}
+                                {goal} <Text fontSize={"2xl"}>{unit}</Text>
                             </Text>
                         </VStack>
                     </View>
