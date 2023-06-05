@@ -40,7 +40,7 @@ const testQuery = async () => {
         testQuery2();
         tx.executeSql("SELECT * FROM data", [], (_, { rows }) => {
             for (let i = 0; i < rows.length; i++) {
-                console.log(rows._array[i], "row");
+                // console.log(rows._array[i], "row");
             }
         });
     });
@@ -49,21 +49,22 @@ const testQuery = async () => {
 const testQuery2 = async () => {
     await db.transaction((tx) => {
         tx.executeSql("SELECT * FROM data", [], (_, { rows }) => {
-            console.log(rows._array[0], "test");
+            // console.log(rows._array[0], "test");
         });
     });
 };
 
-const executeQuery = async (sql, params = []) => {
+const executeQuery = (sql, params) => {
     return new Promise((resolve, reject) => {
-        db.transaction((transaction) => {
-            transaction.executeSql(
+        db.transaction((tx) => {
+            tx.executeSql(
                 sql,
                 params,
-                (transaction, results) => {
-                    resolve(results);
+                (_, { rows }) => {
+                    resolve(rows._array);
                 },
-                (transaction, error) => {
+                (_, error) => {
+                    console.log(error);
                     reject(error);
                 }
             );

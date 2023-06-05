@@ -1,21 +1,21 @@
 import BottomNavigator from "./components/BottomNavigator/BottomNavigator";
-import { NavigationContainer } from "@react-navigation/native";
+
+import { NativeBaseProvider } from "native-base";
+import AppContext from "./Context/AppContext";
 import { dbSetup, createTodayRow, testQuery } from "./queries/tableSetup";
 
 import { checkOnboarding, setGoal, setUnit } from "./utils/asyncStorage";
-import FirstLaunch from "./screens/FirstLaunch/FirstLaunch";
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import React from "react";
 
 const Stack = createNativeStackNavigator();
 
 function Wrapper() {
+    const { appState } = React.useContext(AppContext);
     React.useEffect(() => {
-        dbSetup();
         async function fetchOnboardingData() {
             const onboarding = await checkOnboarding();
-            await setGoal();
+            await setGoal("2500");
             await setUnit();
 
             // Set onboarding === true to true after testing
@@ -26,14 +26,17 @@ function Wrapper() {
         }
 
         fetchOnboardingData();
-    }, []);
+
+        dbSetup();
+    }, [appState]);
+
+    const { statusBarColor } = React.useContext(AppContext);
     return (
-        <NavigationContainer>
-            <Stack.Navigator>
-                <Stack.Screen name="Onboarding" component={FirstLaunch} />
-                <Stack.Screen name="Home" component={BottomNavigator} />
-            </Stack.Navigator>
-        </NavigationContainer>
+        <NativeBaseProvider>
+            <BottomNavigator />
+            <StatusBar style={statusBarColor} />
+        </NativeBaseProvider>
+
     );
 }
 
