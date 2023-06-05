@@ -25,7 +25,6 @@ function Home() {
             console.log(goal, "goal");
             setGoal(goal);
         }
-
         async function fetchProgress() {
             const progress = await fetchIntake();
             setProgress(progress);
@@ -37,20 +36,17 @@ function Home() {
         progressCircle();
         console.log(unit, goal, progress);
     }, [progress]);
-
     const progressCircle = () => {
         console.log("sdf", progress, goal);
         const fill = Math.ceil((progress * 100) / goal);
         console.log("sdf", fill);
         return fill;
     };
-
     const increaseProgress = (value) => {
         console.log(typeof progress, "value");
         increaseIntake(value);
         setProgress(progress + value);
     };
-
     return (
         <View style={styles.container}>
             <VStack>
@@ -73,7 +69,6 @@ function Home() {
                         {(fill) => <Text fontSize={"4xl"}>{fill}%</Text>}
                     </AnimatedCircularProgress>
                 </View>
-
                 <View style={styles.actionsContainer}>
                     <HStack>
                         <View style={styles.buttonContainer}>
@@ -147,7 +142,6 @@ function Home() {
                 <View style={styles.dataContainer}>
                     <VStack space={2}>
                         <Heading>Today's Progress</Heading>
-
                         <Text fontSize={"3xl"}>
                             {progress} / {goal}{" "}
                             <Text fontSize={"2xl"}>{unit}</Text>
@@ -170,13 +164,10 @@ const styles = StyleSheet.create({
     actionsContainer: {
         marginTop: 30,
         width: "100%",
-        justifyContent: "space-evenly",
-        alignItems: "space-evenly",
     },
     progressContainer: {
         justifyContent: "center",
         alignItems: "center",
-        // marginTop: 50,
     },
     headerContainer: {
         justifyContent: "center",
