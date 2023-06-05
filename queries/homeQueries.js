@@ -12,7 +12,6 @@ const fetchIntake = async () => {
                     "SELECT * FROM data ORDER BY id DESC LIMIT 1",
                     [date, "0"],
                     (_, { rows }) => {
-                        console.log(rows._array[0].intake, "intake");
                         resolve(rows._array[0].intake);
                     }
                 );

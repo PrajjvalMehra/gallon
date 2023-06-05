@@ -1,5 +1,12 @@
-import { Button, View } from "native-base";
-import { Text, VStack, Heading, HStack } from "native-base";
+import { Button, KeyboardAvoidingView, ScrollView, View } from "native-base";
+import {
+    Text,
+    VStack,
+    Heading,
+    Actionsheet,
+    useDisclose,
+    Divider,
+} from "native-base";
 import { AnimatedCircularProgress } from "react-native-circular-progress";
 import React from "react";
 import { StyleSheet } from "react-native";
@@ -9,76 +16,121 @@ import { getUnit, getGoal } from "../../utils/asyncStorage";
 import { fetchIntake, increaseIntake } from "../../queries/homeQueries";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
+import AppContext from "../../Context/AppContext";
+import CustomIntake from "../../components/CustomIntake/CustomIntake";
+import { Keyboard, Platform, KeyboardEvent } from "react-native";
+import { parse } from "expo-linking";
+
+const useKeyboardBottomInset = () => {
+    const [bottom, setBottom] = React.useState(0);
+    const subscriptions = React.useRef([]);
+
+    React.useEffect(() => {
+        function onKeyboardChange(e) {
+            if (
+                e.startCoordinates &&
+                e.endCoordinates.screenY < e.startCoordinates.screenY
+            )
+                setBottom(e.endCoordinates.height);
+            else setBottom(0);
+        }
+
+        if (Platform.OS === "ios") {
+            subscriptions.current = [
+                Keyboard.addListener(
+                    "keyboardWillChangeFrame",
+                    onKeyboardChange
+                ),
+            ];
+        } else {
+            subscriptions.current = [
+                Keyboard.addListener("keyboardDidHide", onKeyboardChange),
+                Keyboard.addListener("keyboardDidShow", onKeyboardChange),
+            ];
+        }
+        return () => {
+            subscriptions.current.forEach((subscription) => {
+                subscription.remove();
+            });
+        };
+    }, [setBottom, subscriptions]);
+
+    return bottom;
+};
 function Home() {
+    const { appState } = React.useContext(AppContext);
     const [fill, setFill] = React.useState(0);
     const [goal, setGoal] = React.useState(0);
     const [unit, setUnit] = React.useState("ml");
     const [progress, setProgress] = React.useState(2);
+    const { isOpen, onOpen, onClose } = useDisclose();
+
     React.useEffect(() => {
-        console.log("useEffect");
+        if (!isOpen) Keyboard.dismiss();
+    }, [isOpen]);
+
+    React.useEffect(() => {
         async function fetchUnit() {
             const unit = await getUnit();
             setUnit(unit);
         }
         async function fetchGoal() {
             const goal = await getGoal();
-            console.log(goal, "goal");
             setGoal(goal);
         }
         async function fetchProgress() {
             const progress = await fetchIntake();
             setProgress(progress);
-            console.log(progress, "prog");
         }
         fetchProgress();
         fetchGoal();
         fetchUnit();
-        if (progress && goal) {
-            progressCircle();
-        }
-
-        console.log(unit, goal, progress);
-    }, [progress]);
+        progressCircle();
+    }, [progress, appState, isOpen]);
     const progressCircle = () => {
-        console.log("sdf", progress, goal);
         const fill = Math.ceil((progress * 100) / goal);
-        console.log("sdf", fill);
+        // if (fill / 100 > 0) return;
         setFill(fill);
     };
     const increaseProgress = (value) => {
-        console.log(typeof progress, "value");
-        increaseIntake(value);
-        setProgress(progress + value);
+        const toInt = parseInt(value);
+        onClose();
+        increaseIntake(toInt);
+        setProgress(progress + toInt);
     };
+
+    const bottomInset = useKeyboardBottomInset();
+
     return (
-        <View style={styles.container}>
-            <VStack>
-                <View style={styles.headerContainer}>
-                    <Heading>{new Date().toDateString()}</Heading>
-                </View>
-                <View style={styles.progressContainer}>
-                    <AnimatedCircularProgress
-                        size={260}
-                        width={30}
-                        fill={fill}
-                        tintColor="#a5f3fc"
-                        lineCap="round"
-                        rotation={0}
-                        onAnimationComplete={() =>
-                            console.log("onAnimationComplete")
-                        }
-                        backgroundColor={"#164e63"}
-                    >
-                        {(fill) => <Text fontSize={"4xl"}>{fill}%</Text>}
-                    </AnimatedCircularProgress>
-                </View>
-                <View style={styles.actionsContainer}>
-                    <HStack>
+        <KeyboardAvoidingView
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+        >
+            <ScrollView style={styles.container}>
+                <VStack>
+                    <View style={styles.headerContainer}>
+                        <Heading>{new Date().toDateString()}</Heading>
+                    </View>
+                    <View style={styles.progressContainer}>
+                        <AnimatedCircularProgress
+                            size={260}
+                            width={30}
+                            fill={fill}
+                            tintColor="#a5f3fc"
+                            lineCap="round"
+                            rotation={0}
+                            onAnimationComplete={() => {}}
+                            backgroundColor={"#164e63"}
+                        >
+                            {(fill) => (
+                                <Text fontSize={"4xl"}>{Math.ceil(fill)}%</Text>
+                            )}
+                        </AnimatedCircularProgress>
+                    </View>
+                    <View style={styles.actionsContainer}>
                         <View style={styles.buttonContainer}>
                             <Button
                                 styles={styles.modifyButton}
                                 onPress={(e) => increaseProgress(250)}
-                                marginRight={"2.5%"}
                                 bgColor={"primary.100"}
                                 borderRadius={10}
                                 _pressed={{ bg: "primary.200" }}
@@ -100,8 +152,7 @@ function Home() {
                         <View style={styles.buttonContainer}>
                             <Button
                                 styles={styles.modifyButton}
-                                onPress={increaseProgress}
-                                marginRight={"2.5%"}
+                                onPress={(e) => increaseProgress(500)}
                                 borderRadius={10}
                                 bgColor={"primary.200"}
                                 _pressed={{ bg: "primary.300" }}
@@ -125,8 +176,9 @@ function Home() {
                                 styles={styles.modifyButton}
                                 bgColor={"primary.300"}
                                 _pressed={{ bg: "primary.400" }}
-                                onPress={increaseProgress}
-                                marginRight={"2.5%"}
+                                onPress={(e) => {
+                                    onOpen();
+                                }}
                                 borderRadius={10}
                                 variant={"subtle"}
                                 rightIcon={
@@ -137,22 +189,29 @@ function Home() {
                                     />
                                 }
                             >
-                                <Text>Custom</Text>
+                                <Text>Modify</Text>
                             </Button>
                         </View>
-                    </HStack>
-                </View>
-                <View style={styles.dataContainer}>
-                    <VStack space={2}>
-                        <Heading>Today's Progress</Heading>
-                        <Text fontSize={"3xl"}>
-                            {progress} / {goal}{" "}
-                            <Text fontSize={"2xl"}>{unit}</Text>
-                        </Text>
-                    </VStack>
-                </View>
-            </VStack>
-        </View>
+                    </View>
+                    <View style={styles.dataContainer}>
+                        <VStack space={2}>
+                            <Heading>Today's Progress</Heading>
+                            <Text fontSize={"3xl"}>
+                                {progress} / {goal}{" "}
+                                <Text fontSize={"2xl"}>{unit}</Text>
+                            </Text>
+                        </VStack>
+                    </View>
+                </VStack>
+                <Actionsheet size="full" isOpen={isOpen} onClose={onClose}>
+                    <Actionsheet.Content bottom={bottomInset}>
+                        <View width={"100%"} padding={2}>
+                            <CustomIntake increaseProgress={increaseProgress} />
+                        </View>
+                    </Actionsheet.Content>
+                </Actionsheet>
+            </ScrollView>
+        </KeyboardAvoidingView>
     );
 }
 
@@ -165,8 +224,12 @@ const styles = StyleSheet.create({
         paddingTop: 30,
     },
     actionsContainer: {
+        display: "flex",
+        flexDirection: "row",
         marginTop: 30,
         width: "100%",
+        justifyContent: "space-between",
+        // backgroundColor: "red",
     },
     progressContainer: {
         justifyContent: "center",
@@ -178,7 +241,7 @@ const styles = StyleSheet.create({
         marginBottom: 30,
     },
     buttonContainer: {
-        width: "33.3%",
+        width: "30%",
     },
     dataContainer: {
         backgroundColor: "white",
