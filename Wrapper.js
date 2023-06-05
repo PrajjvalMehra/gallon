@@ -30,7 +30,7 @@ function Wrapper() {
     return (
         <NavigationContainer>
             <Stack.Navigator>
-                <Stack.Screen name="Onboarding" component={FirstLaunch} />
+                <Stack.Screen options={{ headerShown: false }} name="Onboarding" component={FirstLaunch} />
                 <Stack.Screen name="Home" component={BottomNavigator} />
             </Stack.Navigator>
         </NavigationContainer>
