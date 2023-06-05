@@ -1,4 +1,4 @@
-import { Button, View } from "native-base";
+import { Button, ScrollView, View } from "native-base";
 import { Text, VStack, Heading, HStack } from "native-base";
 import { AnimatedCircularProgress } from "react-native-circular-progress";
 import React from "react";
@@ -48,7 +48,7 @@ function Home() {
         setProgress(progress + value);
     };
     return (
-        <View style={styles.container}>
+        <ScrollView style={styles.container}>
             <VStack>
                 <View style={styles.headerContainer}>
                     <Heading>{new Date().toDateString()}</Heading>
@@ -149,7 +149,7 @@ function Home() {
                     </VStack>
                 </View>
             </VStack>
-        </View>
+        </ScrollView>
     );
 }
 
