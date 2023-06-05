@@ -24,9 +24,8 @@ function Logs() {
   React.useEffect(() => {
     if (isFocused) {
       async function fetchLogs() {
-        const historyLogs = await fetchLogsData();
-        setLogs(historyLogs);
-        console.log(historyLogs, "History Logs");
+        const data = await fetchLogsData();
+        setLogs(data);
       }
       fetchLogs();
     }
@@ -39,8 +38,8 @@ function Logs() {
   return (
     <ScrollView>
       {logs &&
-        logs.map((item) => (
-          <Stack space={3} alignItems="center">
+        logs.map((item, key) => (
+          <Stack key={key} space={3} alignItems="center">
             <HStack space={3} alignItems="center" mt="5">
               <Center w="30%">
                 <Text>
@@ -64,7 +63,7 @@ function Logs() {
               </Center>
               <Center w="30%">
                 <Text>
-                  <Text style={styles.H1}>{item.intake}</Text>/100
+                  <Text style={styles.H1}>{item.id}</Text>/100
                 </Text>
               </Center>
             </HStack>
