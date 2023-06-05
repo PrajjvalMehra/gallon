@@ -1,10 +1,18 @@
 import Onboarding from 'react-native-onboarding-swiper';
-import { Image } from 'react-native';
+import { Image, Text, TouchableOpacity } from 'react-native';
 import React from "react";
 import AppContext from "../../Context/AppContext";
 
 function FirstLaunch({navigation}) {
     const { bg, textColor } = React.useContext(AppContext);
+    const Done = ({...props}) => (
+        <TouchableOpacity
+        {...props}
+        >
+        <Text style={{fontSize:16, marginHorizontal:20}}>Done</Text>
+        </TouchableOpacity>
+    )
+    
     return (
         <Onboarding
             //To handle the navigation to the Homepage if Skip is clicked
@@ -13,24 +21,32 @@ function FirstLaunch({navigation}) {
             //To handle the navigation to the Homepage after Done is clicked
             onDone={() => navigation.replace("Home")}
 
+            DoneButtonComponent={Done}
+
             pages={[
                 {
                     backgroundColor: bg,
                     image: <Image source={require('../../assets/favicon.png')} />,
                     title: 'Welcome',
-                    subtitle: 'Welcome to the first slide of the Onboarding Swiper.',
+                    subtitle: 'With our application, being healthy and slender is easy.',
                 },
                 {
                     backgroundColor: '#fdeb93',
                     image: <Image source={require('../../assets/favicon.png')} />,
-                    title: 'Explore',
-                    subtitle: 'This is the second slide of the Onboarding Swiper.',
+                    title: 'Notifications',
+                    subtitle: 'Turn on useful notifications not to forget to drink water.',
                 },
                 {
                     backgroundColor: '#e9bcbe',
                     image: <Image source={require('../../assets/favicon.png')} />,
-                    title: 'All Done',
-                    subtitle: 'This is the Third slide of the Onboarding Swiper.',
+                    title: 'Dialy Goal',
+                    subtitle: 'We will calculate your recommended water intake.',
+                },
+                {
+                    backgroundColor: '#fdeb93',
+                    image: <Image source={require('../../assets/favicon.png')} />,
+                    title: 'Awards',
+                    subtitle: 'Our achivements will motivate you to new achievments  Gool Luck!',
                 }
             ]}
         />
