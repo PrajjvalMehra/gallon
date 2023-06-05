@@ -75,9 +75,9 @@ function Home() {
                             styles={styles.modifyButton}
                             onPress={(e) => increaseProgress(250)}
                             // marginRight={"2.5%"}
-                            bgColor={"primary.100"}
+                            bgColor={"primary.200"}
                             borderRadius={10}
-                            _pressed={{ bg: "primary.200" }}
+                            _pressed={{ bg: "primary.300" }}
                             variant={"subtle"}
                             rightIcon={
                                 <MaterialCommunityIcons
@@ -99,8 +99,8 @@ function Home() {
                             onPress={increaseProgress}
                             // marginRight={"2.5%"}
                             borderRadius={10}
-                            bgColor={"primary.200"}
-                            _pressed={{ bg: "primary.300" }}
+                            bgColor={"primary.300"}
+                            _pressed={{ bg: "primary.400" }}
                             variant={"subtle"}
                             endIcon={
                                 <MaterialCommunityIcons
@@ -119,8 +119,8 @@ function Home() {
                     <View style={styles.buttonContainer}>
                         <Button
                             styles={styles.modifyButton}
-                            bgColor={"primary.300"}
-                            _pressed={{ bg: "primary.400" }}
+                            bgColor={"primary.400"}
+                            _pressed={{ bg: "primary.500" }}
                             onPress={increaseProgress}
                             // marginRight={"2.5%"}
                             borderRadius={10}
