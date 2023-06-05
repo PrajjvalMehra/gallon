@@ -22,7 +22,7 @@ function Wrapper() {
             await setGoal();
             await setUnit();
 
-            // Set onboarding === true to true after testing
+            // Set onboarding === true to false after testing
             // if (onboarding === "false") {
             if (onboarding === "true") {
                 setFirstLaunch(true);

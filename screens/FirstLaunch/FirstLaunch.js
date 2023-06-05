@@ -12,7 +12,7 @@ function FirstLaunch({ navigation }) {
         <TouchableOpacity
             {...props}
         >
-            <Text style={styles.Done}>Done</Text>
+            <Text style={styles.Done}>Get Started</Text>
         </TouchableOpacity>
     )
     //Customizable dots indicator
@@ -73,7 +73,7 @@ function FirstLaunch({ navigation }) {
                     image: <Image source={require('../../assets/goal.png')} />,
                     title: 'Awards',
                     titleStyles: styles.Heading,
-                    subtitle: 'Our achivements will motivate you to new achievments  Gool Luck!',
+                    subtitle: 'Our achivements will motivate you to new achievments  Good Luck!',
                     subTitleStyles: styles.Subheading,
                 }
             ]}
