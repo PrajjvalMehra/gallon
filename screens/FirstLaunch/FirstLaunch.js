@@ -1,19 +1,36 @@
 import Onboarding from 'react-native-onboarding-swiper';
-import { Image, Text, TouchableOpacity } from 'react-native';
+import { View, Image, Text, TouchableOpacity } from 'react-native';
 import React from "react";
 import styles from './styles';
 import AppContext from "../../Context/AppContext";
 
-function FirstLaunch({navigation}) {
+function FirstLaunch({ navigation }) {
     const { bg, textColor } = React.useContext(AppContext);
-    const Done = ({...props}) => (
+
+    //Custom Done button
+    const Done = ({ ...props }) => (
         <TouchableOpacity
-        {...props}
+            {...props}
         >
-        <Text style={{fontSize:16, marginHorizontal:20}}>Done</Text>
+            <Text style={styles.Done}>Done</Text>
         </TouchableOpacity>
     )
-    
+    //Customizable dots indicator
+    const Dots = ({ selected }) => {
+        let backgroundColor;
+        backgroundColor = selected ? '#077d9a' : 'black'
+        return (
+        <View
+        style={{
+            width:24,
+            height:6,
+            marginHorizontal:3,
+            backgroundColor
+        }}
+        />
+        )
+    }
+
     return (
         <Onboarding
             //To handle the navigation to the Homepage if Skip is clicked
@@ -23,6 +40,8 @@ function FirstLaunch({navigation}) {
             onDone={() => navigation.replace("Home")}
 
             DoneButtonComponent={Done}
+
+            DotComponent={Dots}
 
             pages={[
                 {
@@ -34,7 +53,7 @@ function FirstLaunch({navigation}) {
                     subTitleStyles: styles.Subheading,
                 },
                 {
-                    backgroundColor: '#fdeb93',
+                    backgroundColor: bg,
                     image: <Image source={require('../../assets/notification.png')} />,
                     title: 'Notifications',
                     titleStyles: styles.Heading,
@@ -42,7 +61,7 @@ function FirstLaunch({navigation}) {
                     subTitleStyles: styles.Subheading,
                 },
                 {
-                    backgroundColor: '#e9bcbe',
+                    backgroundColor: bg,
                     image: <Image source={require('../../assets/target.png')} />,
                     title: 'Dialy Goal',
                     titleStyles: styles.Heading,
@@ -50,7 +69,7 @@ function FirstLaunch({navigation}) {
                     subTitleStyles: styles.Subheading,
                 },
                 {
-                    backgroundColor: '#fdeb93',
+                    backgroundColor: bg,
                     image: <Image source={require('../../assets/goal.png')} />,
                     title: 'Awards',
                     titleStyles: styles.Heading,
