@@ -14,22 +14,40 @@ import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 import { Keyboard, TouchableWithoutFeedbackComponent } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { TouchableOpacity } from "react-native";
+import { modifyGoal } from "../../utils/asyncStorage";
+function ModifyGoal(props) {
+    const { goal, handleGoalChange, onClose } = props;
+    const [localGoal, setLocalGoal] = React.useState(goal);
 
-function CustomIntake(props) {
-    const [intake, setIntake] = React.useState("1000");
+    const setDBGoal = async (goal) => {
+        await modifyGoal(goal);
+    };
+
+    const handleGoalUpdate = () => {
+        Keyboard.dismiss();
+        async function updateGoal() {
+            await setDBGoal(localGoal);
+        }
+        updateGoal();
+        handleGoalChange(localGoal);
+        onClose();
+
+        // handleGoalChange(localGoal);
+    };
+
     return (
-        <View>
-            <Heading size={"lg"}>Custom Intake</Heading>
+        <KeyboardAvoidingView bounces={false}>
+            <Heading size={"lg"}>Modify Daily Goal</Heading>
             <View style={{ marginTop: 20, marginBottom: 10 }}>
                 <Input
                     variant={"filled"}
                     backgroundColor={"primary.100"}
                     keyboardType="number-pad"
                     type={"number"}
-                    value={intake}
+                    value={localGoal}
                     size={"2xl"}
                     onChange={(e) => {
-                        setIntake(e.nativeEvent.text);
+                        setLocalGoal(e.nativeEvent.text);
                     }}
                     color={"primary.600"}
                     fontSize={"2xl"}
@@ -56,15 +74,14 @@ function CustomIntake(props) {
                 }
                 size={"lg"}
                 borderRadius={10}
-                onPress={(e) => {
-                    props.increaseProgress(intake);
-                    props.onClose();
+                onPress={() => {
+                    handleGoalUpdate();
                 }}
             >
-                Add
+                Modify Goal
             </Button>
-        </View>
+        </KeyboardAvoidingView>
     );
 }
 
-export default CustomIntake;
+export default ModifyGoal;

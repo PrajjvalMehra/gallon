@@ -24,14 +24,22 @@ async function setUnit() {
     }
 }
 
-async function setGoal() {
+async function setGoal(goal) {
     try {
-        // const value = await AsyncStorage.getItem("goal");
-        // if (value == null) {
-        console.log("setting goal");
-        await AsyncStorage.setItem("goal", "2500");
-        // }
+        const value = await AsyncStorage.getItem("goal");
+        if (value == null) {
+            await AsyncStorage.setItem("goal", goal);
+        }
         return value;
+    } catch (e) {
+        // error reading value
+    }
+}
+
+async function modifyGoal(goal) {
+    try {
+        await AsyncStorage.setItem("goal", `${goal}`);
+        return goal;
     } catch (e) {
         // error reading value
     }
@@ -40,7 +48,6 @@ async function setGoal() {
 async function getGoal() {
     let result;
     await AsyncStorage.getItem("goal").then((value) => {
-        console.log(value, "value");
         result = value;
     });
     return result;
@@ -56,4 +63,4 @@ async function getUnit() {
     }
 }
 
-export { checkOnboarding, setUnit, getUnit, setGoal, getGoal };
+export { checkOnboarding, setUnit, getUnit, setGoal, getGoal, modifyGoal };

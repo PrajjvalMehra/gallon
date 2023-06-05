@@ -20,6 +20,7 @@ import AppContext from "../../Context/AppContext";
 import CustomIntake from "../../components/CustomIntake/CustomIntake";
 import { Keyboard, Platform, KeyboardEvent } from "react-native";
 import { parse } from "expo-linking";
+import { useIsFocused } from "@react-navigation/native";
 
 const useKeyboardBottomInset = () => {
     const [bottom, setBottom] = React.useState(0);
@@ -58,6 +59,7 @@ const useKeyboardBottomInset = () => {
     return bottom;
 };
 function Home() {
+    const isFocus = useIsFocused();
     const { appState } = React.useContext(AppContext);
     const [fill, setFill] = React.useState(0);
     const [goal, setGoal] = React.useState(0);
@@ -84,9 +86,10 @@ function Home() {
         }
         fetchProgress();
         fetchGoal();
-        fetchUnit();
         progressCircle();
-    }, [progress, appState, isOpen]);
+        fetchUnit();
+    }, [progress, appState, isOpen, isFocus]);
+
     const progressCircle = () => {
         const fill = Math.ceil((progress * 100) / goal);
         // if (fill / 100 > 0) return;
@@ -112,11 +115,15 @@ function Home() {
                     </View>
                     <View style={styles.progressContainer}>
                         <AnimatedCircularProgress
+                            ref={(ref) => {
+                                if (isFocus) progressCircle();
+                            }}
                             size={260}
                             width={30}
                             fill={fill}
                             tintColor="#a5f3fc"
                             lineCap="round"
+                            animate={(fill) => {}}
                             rotation={0}
                             onAnimationComplete={() => {}}
                             backgroundColor={"#164e63"}
@@ -206,7 +213,13 @@ function Home() {
                 <Actionsheet size="full" isOpen={isOpen} onClose={onClose}>
                     <Actionsheet.Content bottom={bottomInset}>
                         <View width={"100%"} padding={2}>
-                            <CustomIntake increaseProgress={increaseProgress} />
+                            <CustomIntake
+                                increaseProgress={increaseProgress}
+                                onClose={() => {
+                                    onClose();
+                                    Keyboard.dismiss();
+                                }}
+                            />
                         </View>
                     </Actionsheet.Content>
                 </Actionsheet>

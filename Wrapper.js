@@ -13,7 +13,7 @@ function Wrapper() {
     React.useEffect(() => {
         async function fetchOnboardingData() {
             const onboarding = await checkOnboarding();
-            await setGoal();
+            await setGoal("2500");
             await setUnit();
 
             // Set onboarding === true to true after testing
