@@ -48,7 +48,7 @@ function Wrapper() {
     const { statusBarColor } = React.useContext(AppContext);
     return (
         firstLaunch != null && (
-            <NavigationContainer>
+            <NavigationContainer independent={true}>
                 <Stack.Navigator>
                     {firstLaunch && (
                         <Stack.Screen options={{ headerShown: false }} name="Onboarding" component={FirstLaunch} />

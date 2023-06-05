@@ -2,7 +2,6 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Home from "../../screens/Home/Home";
 import Settings from "../../screens/Settings/Settings";
 import { StatusBar } from "expo-status-bar";
-import { NavigationContainer } from "@react-navigation/native";
 import { NativeBaseProvider } from "native-base";
 import AppContext from "../../Context/AppContext";
 ("../../Context/AppProvider");
@@ -17,7 +16,6 @@ function BottomNavigator() {
     const { bg, textColor, statusBarColor } = React.useContext(AppContext);
     return (
         <NativeBaseProvider>
-            <NavigationContainer independent={true}>
                 <Tab.Navigator
                     screenOptions={{
                         headerStyle: {
@@ -63,7 +61,6 @@ function BottomNavigator() {
             />
                 </Tab.Navigator>
                 <StatusBar style={statusBarColor} />
-            </NavigationContainer>
         </NativeBaseProvider>
 
     );
