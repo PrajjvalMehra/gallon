@@ -26,43 +26,50 @@ function BottomNavigator() {
                             backgroundColor: bg,
                         },
                         tabBarActiveTintColor: "#0891b2",
-            }}
+                    }}
                 >
                     <Tab.Screen
-                name="History"
-                options={{
-                    tabBarIcon: ({ color, size }) => (
-                        <MaterialIcons
-                            name="history"
-                            size={size}
-                            color={color}
-                        />
-                    ),
-                }}
-                component={History}
-            />
-            <Tab.Screen
-                name="Home"
-                options={{
-                    tabBarIcon: ({ color, size }) => (
-                        <Ionicons name="home" size={size} color={color} />
-                    ),
-                }}
-                component={Home}
-            />
+                        name="History"
+                        options={{
+                            tabBarIcon: ({ color, size }) => (
+                                <MaterialIcons
+                                    name="history"
+                                    size={size}
+                                    color={color}
+                                />
+                            ),
+                        }}
+                        component={History}
+                    />
                     <Tab.Screen
-                name="Settings"
-                options={{
-                    tabBarIcon: ({ color, size }) => (
-                        <Ionicons name="ios-cog" size={size} color={color} />
-                    ),
-                }}
-                component={Settings}
-            />
+                        name="Home"
+                        options={{
+                            tabBarIcon: ({ color, size }) => (
+                                <Ionicons
+                                    name="home"
+                                    size={size}
+                                    color={color}
+                                />
+                            ),
+                        }}
+                        component={Home}
+                    />
+                    <Tab.Screen
+                        name="Settings"
+                        options={{
+                            tabBarIcon: ({ color, size }) => (
+                                <Ionicons
+                                    name="ios-cog"
+                                    size={size}
+                                    color={color}
+                                />
+                            ),
+                        }}
+                        component={Settings}
+                    />
                 </Tab.Navigator>
                 <StatusBar style={statusBarColor} />
         </NativeBaseProvider>
-
     );
 }
 
