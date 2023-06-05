@@ -23,6 +23,7 @@ function BottomNavigator() {
                 tabBarStyle: {
                     backgroundColor: bg,
                 },
+                tabBarActiveTintColor: "#0891b2",
             }}
         >
             <Tab.Screen
