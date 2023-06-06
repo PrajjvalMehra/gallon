@@ -15,6 +15,7 @@ import {
 } from "native-base";
 import { useIsFocused } from "@react-navigation/native";
 import { fetchLogsData } from "../../../queries/historyQueries";
+import Moment from "moment";
 
 function Logs() {
   const [logs, setLogs] = React.useState([]);
@@ -34,6 +35,7 @@ function Logs() {
   const month = "April";
   const day = "1";
   const year = "2023";
+  var logsDay = "";
 
   return (
     <ScrollView>
@@ -43,9 +45,12 @@ function Logs() {
             <HStack space={3} alignItems="center" mt="5">
               <Center w="30%">
                 <Text>
-                  {month}
-                  <Text style={styles.H1}> {day} </Text>
-                  <Text>{year}</Text>
+                  {Moment(item.date).format("MMM")}
+                  <Text style={styles.H1}>
+                    {" "}
+                    {Moment(item.date).format("D")}{" "}
+                  </Text>
+                  <Text>{Moment(item.date).format("YYYY")}</Text>
                 </Text>
               </Center>
               <Center w="30%">
@@ -63,7 +68,7 @@ function Logs() {
               </Center>
               <Center w="30%">
                 <Text>
-                  <Text style={styles.H1}>{item.id}</Text>/100
+                  <Text style={styles.H1}>{item.intake}</Text>/{item.goal}
                 </Text>
               </Center>
             </HStack>
