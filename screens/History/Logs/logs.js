@@ -16,9 +16,11 @@ import {
 import { useIsFocused } from "@react-navigation/native";
 import { fetchLogsData } from "../../../queries/historyQueries";
 import Moment from "moment";
+import { getGoal } from "../../../utils/asyncStorage";
 
 function Logs() {
   const [logs, setLogs] = React.useState([]);
+  const [goal, getGoal] = React.useState(0);
 
   const isFocused = useIsFocused();
 
@@ -28,13 +30,16 @@ function Logs() {
         const data = await fetchLogsData();
         setLogs(data);
       }
+      async function fetchGoal() {
+        const data = await getGoal();
+        getGoal(data);
+      }
+
       fetchLogs();
+      fetchGoal();
     }
   }, [isFocused]);
 
-  const month = "April";
-  const day = "1";
-  const year = "2023";
   var logsDay = "";
 
   return (
@@ -61,14 +66,14 @@ function Logs() {
                     _filledTrack={{
                       bg: "primary.200",
                     }}
-                    value={75}
+                    value={(item.intake / goal) * 100}
                     mx="1"
                   />
                 </Box>
               </Center>
               <Center w="30%">
                 <Text>
-                  <Text style={styles.H1}>{item.intake}</Text>/{item.goal}
+                  <Text style={styles.H1}>{item.intake}</Text>/{goal}
                 </Text>
               </Center>
             </HStack>
