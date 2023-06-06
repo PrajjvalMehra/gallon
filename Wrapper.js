@@ -3,7 +3,7 @@ import BottomNavigator from "./components/BottomNavigator/BottomNavigator";
 import { NativeBaseProvider } from "native-base";
 import AppContext from "./Context/AppContext";
 import { dbSetup, createTodayRow, testQuery } from "./queries/tableSetup";
-
+import React from "react";
 
 import {
     checkOnboarding,
@@ -13,8 +13,6 @@ import {
 } from "./utils/asyncStorage";
 import FirstLaunch from "./screens/FirstLaunch/FirstLaunch";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-
-
 
 const Stack = createNativeStackNavigator();
 
@@ -28,10 +26,9 @@ function Wrapper() {
             await setGoal("2500");
             await setUnit();
 
-
             // Set onboarding === true to false after testing
             // if (onboarding === "false") {
-            if (onboarding === "true") {
+            if (onboarding === "false") {
                 setFirstLaunch(true);
                 await setOnboardung();
                 createTodayRow();
