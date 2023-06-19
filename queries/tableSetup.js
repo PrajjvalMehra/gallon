@@ -31,26 +31,17 @@ const createTodayRow = async () => {
 };
 
 const testQuery = async () => {
-    // await db.transaction(async (tx) => {
-    //     await tx.executeSql("DELETE FROM data");
-    // });
-    // console.log("Table cleared successfully.");
-
     await db.transaction((tx) => {
         testQuery2();
         tx.executeSql("SELECT * FROM data", [], (_, { rows }) => {
-            for (let i = 0; i < rows.length; i++) {
-                // console.log(rows._array[i], "row");
-            }
+            for (let i = 0; i < rows.length; i++) {}
         });
     });
 };
 
 const testQuery2 = async () => {
     await db.transaction((tx) => {
-        tx.executeSql("SELECT * FROM data", [], (_, { rows }) => {
-            // console.log(rows._array[0], "test");
-        });
+        tx.executeSql("SELECT * FROM data", [], (_, { rows }) => {});
     });
 };
 
