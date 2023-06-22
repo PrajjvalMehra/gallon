@@ -56,13 +56,14 @@ const useKeyboardBottomInset = () => {
   return bottom;
 };
 function Home() {
-  const isFocus = useIsFocused();
-  const { appState } = React.useContext(AppContext);
-  const [fill, setFill] = React.useState(0);
-  const [goal, setGoal] = React.useState(0);
-  const [unit, setUnit] = React.useState("ml");
-  const [progress, setProgress] = React.useState(0);
-  const { isOpen, onOpen, onClose } = useDisclose();
+    const isFocus = useIsFocused();
+    const { appState, renderValue } = React.useContext(AppContext);
+    const [fill, setFill] = React.useState(0);
+    const [goal, setGoal] = React.useState(0);
+    const [unit, setUnit] = React.useState("ml");
+    const [progress, setProgress] = React.useState(2);
+    const { isOpen, onOpen, onClose } = useDisclose();
+
 
   React.useEffect(() => {
     if (!isOpen) Keyboard.dismiss();
@@ -101,122 +102,132 @@ function Home() {
 
   const bottomInset = useKeyboardBottomInset();
 
-  return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-    >
-      <ScrollView style={styles.container}>
-        <VStack>
-          <View style={styles.headerContainer}>
-            <Heading>{new Date().toDateString()}</Heading>
-          </View>
-          <View style={styles.progressContainer}>
-            <AnimatedCircularProgress
-              ref={(ref) => {
-                if (isFocus) progressCircle();
-              }}
-              size={260}
-              width={30}
-              fill={fill}
-              tintColor="#a5f3fc"
-              lineCap="round"
-              animate={(fill) => {}}
-              rotation={0}
-              onAnimationComplete={() => {}}
-              backgroundColor={"#164e63"}
-            >
-              {(fill) => <Text fontSize={"4xl"}>{Math.ceil(fill)}%</Text>}
-            </AnimatedCircularProgress>
-          </View>
-          <View style={styles.actionsContainer}>
-            <View style={styles.buttonContainer}>
-              <Button
-                styles={styles.modifyButton}
-                onPress={(e) => increaseProgress(250)}
-                bgColor={"primary.100"}
-                borderRadius={10}
-                _pressed={{ bg: "primary.200" }}
-                variant={"subtle"}
-                rightIcon={
-                  <MaterialCommunityIcons
-                    name="cup-water"
-                    size={24}
-                    color="black"
-                  />
-                }
-              >
-                <Text>
-                  250
-                  {unit}
-                </Text>
-              </Button>
-            </View>
-            <View style={styles.buttonContainer}>
-              <Button
-                styles={styles.modifyButton}
-                onPress={(e) => increaseProgress(500)}
-                borderRadius={10}
-                bgColor={"primary.200"}
-                _pressed={{ bg: "primary.300" }}
-                variant={"subtle"}
-                endIcon={
-                  <MaterialCommunityIcons
-                    name="bottle-wine-outline"
-                    size={24}
-                    color="black"
-                  />
-                }
-              >
-                <Text>
-                  500
-                  {unit}
-                </Text>
-              </Button>
-            </View>
-            <View style={styles.buttonContainer}>
-              <Button
-                styles={styles.modifyButton}
-                bgColor={"primary.300"}
-                _pressed={{ bg: "primary.400" }}
-                onPress={(e) => {
-                  onOpen();
-                }}
-                borderRadius={10}
-                variant={"subtle"}
-                rightIcon={
-                  <Ionicons name="ios-water-outline" size={22} color="black" />
-                }
-              >
-                <Text>Modify</Text>
-              </Button>
-            </View>
-          </View>
-          <View style={styles.dataContainer}>
-            <VStack space={2}>
-              <Heading>Today's Progress</Heading>
-              <Text fontSize={"3xl"}>
-                <Text color={"primary.600"}>{progress}</Text> / {goal}{" "}
-                <Text fontSize={"2xl"}>{unit}</Text>
-              </Text>
-            </VStack>
-          </View>
-        </VStack>
-        <Actionsheet size="full" isOpen={isOpen} onClose={onClose}>
-          <Actionsheet.Content bottom={bottomInset}>
-            <View width={"100%"} padding={2}>
-              <CustomIntake
-                increaseProgress={increaseProgress}
-                onClose={() => {
-                  onClose();
-                  Keyboard.dismiss();
-                }}
-              />
-            </View>
-          </Actionsheet.Content>
-        </Actionsheet>
-      </ScrollView>
-    </KeyboardAvoidingView>
-  );
+
+    return (
+        <KeyboardAvoidingView
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+        >
+            <ScrollView style={styles.container}>
+                <VStack>
+                    <View style={styles.headerContainer}>
+                        <Heading>{new Date().toDateString()}</Heading>
+                    </View>
+                    <View style={styles.progressContainer}>
+                        <AnimatedCircularProgress
+                            ref={(ref) => {
+                                if (isFocus) progressCircle();
+                            }}
+                            size={260}
+                            width={30}
+                            fill={fill}
+                            tintColor="#a5f3fc"
+                            lineCap="round"
+                            animate={(fill) => {}}
+                            rotation={0}
+                            onAnimationComplete={() => {}}
+                            backgroundColor={"#164e63"}
+                        >
+                            {(fill) => (
+                                <Text fontSize={"4xl"}>{Math.ceil(fill)}%</Text>
+                            )}
+                        </AnimatedCircularProgress>
+                    </View>
+                    <View style={styles.actionsContainer}>
+                        <View style={styles.buttonContainer}>
+                            <Button
+                                styles={styles.modifyButton}
+                                onPress={(e) => increaseProgress(250)}
+                                bgColor={"primary.100"}
+                                borderRadius={10}
+                                _pressed={{ bg: "primary.200" }}
+                                variant={"subtle"}
+                                rightIcon={
+                                    <MaterialCommunityIcons
+                                        name="cup-water"
+                                        size={24}
+                                        color="black"
+                                    />
+                                }
+                            >
+                                <Text>
+                                    {" "}
+                                    {renderValue(250).toFixed(0)} {unit}
+                                </Text>
+                            </Button>
+                        </View>
+                        <View style={styles.buttonContainer}>
+                            <Button
+                                styles={styles.modifyButton}
+                                onPress={(e) => increaseProgress(500)}
+                                borderRadius={10}
+                                bgColor={"primary.200"}
+                                _pressed={{ bg: "primary.300" }}
+                                variant={"subtle"}
+                                endIcon={
+                                    <MaterialCommunityIcons
+                                        name="bottle-wine-outline"
+                                        size={24}
+                                        color="black"
+                                    />
+                                }
+                            >
+                                <Text>
+                                    {renderValue(500).toFixed(0)} {unit}
+                                </Text>
+                            </Button>
+                        </View>
+                        <View style={styles.buttonContainer}>
+                            <Button
+                                styles={styles.modifyButton}
+                                bgColor={"primary.300"}
+                                _pressed={{ bg: "primary.400" }}
+                                onPress={(e) => {
+                                    onOpen();
+                                }}
+                                borderRadius={10}
+                                variant={"subtle"}
+                                rightIcon={
+                                    <Ionicons
+                                        name="ios-water-outline"
+                                        size={22}
+                                        color="black"
+                                    />
+                                }
+                            >
+                                <Text>Modify</Text>
+                            </Button>
+                        </View>
+                    </View>
+                    <View style={styles.dataContainer}>
+                        <VStack space={2}>
+                            <Heading>Today's Progress</Heading>
+                            <Text fontSize={"3xl"}>
+                                <Text color={"primary.600"}>
+                                    {renderValue(progress)}
+                                </Text>{" "}
+                                / {renderValue(goal)}{" "}
+                                <Text fontSize={"2xl"}>{unit}</Text>
+                            </Text>
+                        </VStack>
+                    </View>
+                </VStack>
+                <Actionsheet size="full" isOpen={isOpen} onClose={onClose}>
+                    <Actionsheet.Content bottom={bottomInset}>
+                        <View width={"100%"} padding={2}>
+                            <CustomIntake
+                                increaseProgress={increaseProgress}
+                                onClose={() => {
+                                    onClose();
+                                    Keyboard.dismiss();
+                                }}
+                            />
+                        </View>
+                    </Actionsheet.Content>
+                </Actionsheet>
+            </ScrollView>
+        </KeyboardAvoidingView>
+    );
+
 }
 
 const styles = StyleSheet.create({

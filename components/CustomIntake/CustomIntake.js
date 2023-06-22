@@ -9,6 +9,7 @@ import {
     Button,
     Pressable,
 } from "native-base";
+import AppContext from "../../Context/AppContext";
 import { Ionicons } from "@expo/vector-icons";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 import { Keyboard, TouchableWithoutFeedbackComponent } from "react-native";
@@ -16,7 +17,8 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { TouchableOpacity } from "react-native";
 
 function CustomIntake(props) {
-    const [intake, setIntake] = React.useState("1000");
+    const [intake, setIntake] = React.useState("0");
+    const { unit } = React.useContext(AppContext);
     return (
         <View>
             <Heading size={"lg"}>Custom Intake</Heading>
@@ -37,7 +39,8 @@ function CustomIntake(props) {
                     borderRadius={10}
                     InputRightElement={
                         <Text fontSize={"3xl"} color={"primary.600"}>
-                            ml{"   "}
+                            {unit}
+                            {"   "}
                         </Text>
                     }
                 ></Input>

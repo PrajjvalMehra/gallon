@@ -15,13 +15,19 @@ import { Keyboard, TouchableWithoutFeedbackComponent } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { TouchableOpacity } from "react-native";
 import { modifyGoal } from "../../utils/asyncStorage";
+import AppContext from "../../Context/AppContext";
 function ModifyGoal(props) {
     const { goal, handleGoalChange, onClose } = props;
+    const { unit, renderValue } = React.useContext(AppContext);
     const [localGoal, setLocalGoal] = React.useState(goal);
 
     const setDBGoal = async (goal) => {
         await modifyGoal(goal);
     };
+
+    React.useEffect(() => {
+        setLocalGoal(renderValue(goal));
+    }, [goal]);
 
     const handleGoalUpdate = () => {
         Keyboard.dismiss();
@@ -44,7 +50,7 @@ function ModifyGoal(props) {
                     backgroundColor={"primary.100"}
                     keyboardType="number-pad"
                     type={"number"}
-                    value={localGoal}
+                    value={localGoal.toString()}
                     size={"2xl"}
                     onChange={(e) => {
                         setLocalGoal(e.nativeEvent.text);
@@ -55,7 +61,8 @@ function ModifyGoal(props) {
                     borderRadius={10}
                     InputRightElement={
                         <Text fontSize={"3xl"} color={"primary.600"}>
-                            ml{"   "}
+                            {unit.toString()}
+                            {"   "}
                         </Text>
                     }
                 ></Input>
