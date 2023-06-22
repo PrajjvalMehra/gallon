@@ -75,10 +75,12 @@ function Settings() {
     const handleUnitChange = () => {
         const options = ["ml", "fl oz", "Cancel"];
         const cancelButtonIndex = 2;
+        const cancelButtonTintColor = "red";
 
         showActionSheetWithOptions(
             {
                 options,
+                cancelButtonTintColor,
                 cancelButtonIndex,
             },
             (buttonIndex) => {
