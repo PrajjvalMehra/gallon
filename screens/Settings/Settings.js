@@ -67,13 +67,9 @@ function Settings() {
     const fetchGoal = () => {
         async function fetchGoal() {
             const goal = await getGoal();
-            handleGoalChange(goal);
+            setGoal(goal);
         }
         fetchGoal();
-    };
-
-    const handleGoalChange = (goal) => {
-        setGoal(goal);
     };
 
     const handleUnitChange = () => {
@@ -103,11 +99,7 @@ function Settings() {
                     variant="unstyled"
                     onPress={() => {
                         setActionElement(
-                            <ModifyGoal
-                                handleGoalChange={handleGoalChange}
-                                goal={goal}
-                                onClose={onClose}
-                            />
+                            <ModifyGoal goal={goal} onClose={onClose} />
                         );
                         onOpen();
                     }}
