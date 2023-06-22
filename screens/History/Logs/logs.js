@@ -44,8 +44,6 @@ function Logs() {
     }
   }, [isFocused]);
 
-  var logsDay = "";
-
   return (
     <ScrollView>
       {logs.map((item, key) => (
