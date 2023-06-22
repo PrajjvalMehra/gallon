@@ -45,7 +45,6 @@ function AppProvider({ children }) {
 
     const renderValue = (value) => {
         if (unit === "ml") {
-            console.log(" result", value, unit);
             return +(value * 1).toFixed(0).toString();
         } else {
             return +(value * 0.033814).toFixed(0).toString();
