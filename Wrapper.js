@@ -30,7 +30,7 @@ function Wrapper() {
             // if (onboarding === "false") {
             if (onboarding === "true") {
                 setFirstLaunch(true);
-                await setOnboardung();
+               // await setOnboardung();
                 createTodayRow();
                 testQuery();
             } else {

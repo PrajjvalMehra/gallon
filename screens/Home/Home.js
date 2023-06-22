@@ -7,6 +7,10 @@ import {
     useDisclose,
     Divider,
 } from "native-base";
+import {
+    checkOnboarding,
+    setOnboardung,
+} from "../../utils/asyncStorage";
 import { AnimatedCircularProgress } from "react-native-circular-progress";
 import React from "react";
 import { StyleSheet } from "react-native";
@@ -21,6 +25,7 @@ import CustomIntake from "../../components/CustomIntake/CustomIntake";
 import { Keyboard, Platform, KeyboardEvent } from "react-native";
 import { parse } from "expo-linking";
 import { useIsFocused } from "@react-navigation/native";
+import PersonalizedIntake from "../../components/PersonalizedIntake/Personalized";
 
 const useKeyboardBottomInset = () => {
     const [bottom, setBottom] = React.useState(0);
@@ -61,17 +66,36 @@ const useKeyboardBottomInset = () => {
 function Home() {
     const isFocus = useIsFocused();
     const { appState, renderValue } = React.useContext(AppContext);
+    const [actionElement, setActionElement] = React.useState();
     const [fill, setFill] = React.useState(0);
     const [goal, setGoal] = React.useState(0);
     const [unit, setUnit] = React.useState("ml");
     const [progress, setProgress] = React.useState(2);
     const { isOpen, onOpen, onClose } = useDisclose();
+    const [firstLaunch, setFirstLaunch] = React.useState(null);
+
 
     React.useEffect(() => {
         if (!isOpen) Keyboard.dismiss();
     }, [isOpen]);
 
     React.useEffect(() => {
+        async function fetchOnboardingData() {
+            const onboarding = await checkOnboarding();
+
+            if (onboarding === "true") {
+                setFirstLaunch(true);
+                await setOnboardung();
+                setActionElement(
+                    <PersonalizedIntake goal={goal} onClose={onClose} />
+                );
+                onOpen();
+            } else {
+                setFirstLaunch(false);
+            }
+
+        }
+
         async function fetchUnit() {
             const unit = await getUnit();
             setUnit(unit);
@@ -84,6 +108,7 @@ function Home() {
             const progress = await fetchIntake();
             setProgress(progress);
         }
+        fetchOnboardingData();
         fetchProgress();
         fetchGoal();
         progressCircle();
@@ -123,9 +148,9 @@ function Home() {
                             fill={fill}
                             tintColor="#a5f3fc"
                             lineCap="round"
-                            animate={(fill) => {}}
+                            animate={(fill) => { }}
                             rotation={0}
-                            onAnimationComplete={() => {}}
+                            onAnimationComplete={() => { }}
                             backgroundColor={"#164e63"}
                         >
                             {(fill) => (
@@ -215,13 +240,17 @@ function Home() {
                 <Actionsheet size="full" isOpen={isOpen} onClose={onClose}>
                     <Actionsheet.Content bottom={bottomInset}>
                         <View width={"100%"} padding={2}>
-                            <CustomIntake
-                                increaseProgress={increaseProgress}
-                                onClose={() => {
-                                    onClose();
-                                    Keyboard.dismiss();
-                                }}
-                            />
+                            {!firstLaunch && (
+                                <CustomIntake
+                                    increaseProgress={increaseProgress}
+                                    onClose={() => {
+                                        onClose();
+                                        Keyboard.dismiss();
+                                    }}
+                                />
+                            )}
+                            {actionElement}
+
                         </View>
                     </Actionsheet.Content>
                 </Actionsheet>
