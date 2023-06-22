@@ -10,6 +10,7 @@ import { useActionSheet } from "@expo/react-native-action-sheet";
 
 import ModifyGoal from "../../components/ModifyGoal/ModifyGoal";
 import PersonalizedIntake from "../../components/PersonalizedIntake/Personalized";
+import Notifications from "../../components/Notifications/Notifications";
 import { Feather } from "@expo/vector-icons";
 import { getGoal } from "../../utils/asyncStorage";
 
@@ -120,6 +121,31 @@ function Settings() {
                     </Text>
                     <Text color={textColor} fontSize={"lg"}>
                         recommendation
+                    </Text>
+                </Button>
+                <Button
+                    style={styles.settingsPuck}
+                    variant="unstyled"
+                    onPress={() => {
+                        setActionElement(
+                            <Notifications goal={goal} onClose={onClose} />
+                        );
+                        onOpen();
+                    }}
+                    background={"white"}
+                    width={"50%"}
+                    borderRadius={15}
+                    marginBottom={2}
+                    _pressed={{ opacity: 0.5 }}
+                >
+                    <Text style={styles.modifyGoalText}>
+                        Notifications{"   "}
+                        <Pressable>
+                            <Feather name="edit" size={20} />
+                        </Pressable>
+                    </Text>
+                    <Text color={textColor} fontSize={"lg"}>
+                        
                     </Text>
                 </Button>
                 <Button
