@@ -6,6 +6,7 @@ import { ActionSheetProvider } from "@expo/react-native-action-sheet";
 import Wrapper from "./Wrapper";
 
 function App() {
+
     return (
         <ActionSheetProvider>
             <AppProvider>
@@ -15,6 +16,7 @@ function App() {
             </AppProvider>
         </ActionSheetProvider>
     );
+
 }
 
 export default App;

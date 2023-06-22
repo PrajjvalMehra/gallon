@@ -1,11 +1,11 @@
 import { Button, KeyboardAvoidingView, ScrollView, View } from "native-base";
 import {
-    Text,
-    VStack,
-    Heading,
-    Actionsheet,
-    useDisclose,
-    Divider,
+  Text,
+  VStack,
+  Heading,
+  Actionsheet,
+  useDisclose,
+  Divider,
 } from "native-base";
 import { AnimatedCircularProgress } from "react-native-circular-progress";
 import React from "react";
@@ -23,40 +23,37 @@ import { parse } from "expo-linking";
 import { useIsFocused } from "@react-navigation/native";
 
 const useKeyboardBottomInset = () => {
-    const [bottom, setBottom] = React.useState(0);
-    const subscriptions = React.useRef([]);
+  const [bottom, setBottom] = React.useState(0);
+  const subscriptions = React.useRef([]);
 
-    React.useEffect(() => {
-        function onKeyboardChange(e) {
-            if (
-                e.startCoordinates &&
-                e.endCoordinates.screenY < e.startCoordinates.screenY
-            )
-                setBottom(e.endCoordinates.height);
-            else setBottom(0);
-        }
+  React.useEffect(() => {
+    function onKeyboardChange(e) {
+      if (
+        e.startCoordinates &&
+        e.endCoordinates.screenY < e.startCoordinates.screenY
+      )
+        setBottom(e.endCoordinates.height);
+      else setBottom(0);
+    }
 
-        if (Platform.OS === "ios") {
-            subscriptions.current = [
-                Keyboard.addListener(
-                    "keyboardWillChangeFrame",
-                    onKeyboardChange
-                ),
-            ];
-        } else {
-            subscriptions.current = [
-                Keyboard.addListener("keyboardDidHide", onKeyboardChange),
-                Keyboard.addListener("keyboardDidShow", onKeyboardChange),
-            ];
-        }
-        return () => {
-            subscriptions.current.forEach((subscription) => {
-                subscription.remove();
-            });
-        };
-    }, [setBottom, subscriptions]);
+    if (Platform.OS === "ios") {
+      subscriptions.current = [
+        Keyboard.addListener("keyboardWillChangeFrame", onKeyboardChange),
+      ];
+    } else {
+      subscriptions.current = [
+        Keyboard.addListener("keyboardDidHide", onKeyboardChange),
+        Keyboard.addListener("keyboardDidShow", onKeyboardChange),
+      ];
+    }
+    return () => {
+      subscriptions.current.forEach((subscription) => {
+        subscription.remove();
+      });
+    };
+  }, [setBottom, subscriptions]);
 
-    return bottom;
+  return bottom;
 };
 function Home() {
     const isFocus = useIsFocused();
@@ -67,42 +64,44 @@ function Home() {
     const [progress, setProgress] = React.useState(2);
     const { isOpen, onOpen, onClose } = useDisclose();
 
-    React.useEffect(() => {
-        if (!isOpen) Keyboard.dismiss();
-    }, [isOpen]);
 
-    React.useEffect(() => {
-        async function fetchUnit() {
-            const unit = await getUnit();
-            setUnit(unit);
-        }
-        async function fetchGoal() {
-            const goal = await getGoal();
-            setGoal(goal);
-        }
-        async function fetchProgress() {
-            const progress = await fetchIntake();
-            setProgress(progress);
-        }
-        fetchProgress();
-        fetchGoal();
-        progressCircle();
-        fetchUnit();
-    }, [progress, appState, isOpen, isFocus]);
+  React.useEffect(() => {
+    if (!isOpen) Keyboard.dismiss();
+  }, [isOpen]);
 
-    const progressCircle = () => {
-        const fill = Math.ceil((progress * 100) / goal);
-        // if (fill / 100 > 0) return;
-        setFill(fill);
-    };
-    const increaseProgress = (value) => {
-        const toInt = parseInt(value);
-        onClose();
-        increaseIntake(toInt);
-        setProgress(progress + toInt);
-    };
+  React.useEffect(() => {
+    async function fetchUnit() {
+      const unit = await getUnit();
+      setUnit(unit);
+    }
+    async function fetchGoal() {
+      const goal = await getGoal();
+      setGoal(goal);
+    }
+    async function fetchProgress() {
+      const progress = await fetchIntake();
+      setProgress(progress);
+    }
+    fetchProgress();
+    fetchGoal();
+    progressCircle();
+    fetchUnit();
+  }, [progress, appState, isOpen, isFocus]);
 
-    const bottomInset = useKeyboardBottomInset();
+  const progressCircle = () => {
+    const fill = Math.ceil((progress * 100) / goal);
+    // if (fill / 100 > 0) return;
+    setFill(fill);
+  };
+  const increaseProgress = (value) => {
+    const toInt = parseInt(value);
+    onClose();
+    increaseIntake(toInt);
+    setProgress(progress + toInt);
+  };
+
+  const bottomInset = useKeyboardBottomInset();
+
 
     return (
         <KeyboardAvoidingView
@@ -228,43 +227,44 @@ function Home() {
             </ScrollView>
         </KeyboardAvoidingView>
     );
+
 }
 
 const styles = StyleSheet.create({
-    container: {
-        display: "flex",
-        paddingRight: 30,
-        paddingLeft: 30,
-        paddingBottom: 30,
-        paddingTop: 30,
-    },
-    actionsContainer: {
-        display: "flex",
-        flexDirection: "row",
-        marginTop: 30,
-        width: "100%",
-        justifyContent: "space-between",
-        // backgroundColor: "red",
-    },
-    progressContainer: {
-        justifyContent: "center",
-        alignItems: "center",
-    },
-    headerContainer: {
-        justifyContent: "center",
-        alignItems: "center",
-        marginBottom: 30,
-    },
-    buttonContainer: {
-        width: "30%",
-    },
-    dataContainer: {
-        backgroundColor: "white",
-        height: 120,
-        marginTop: 30,
-        padding: 15,
-        borderRadius: 20,
-    },
+  container: {
+    display: "flex",
+    paddingRight: 30,
+    paddingLeft: 30,
+    paddingBottom: 30,
+    paddingTop: 30,
+  },
+  actionsContainer: {
+    display: "flex",
+    flexDirection: "row",
+    marginTop: 30,
+    width: "100%",
+    justifyContent: "space-between",
+    // backgroundColor: "red",
+  },
+  progressContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  headerContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 30,
+  },
+  buttonContainer: {
+    width: "30%",
+  },
+  dataContainer: {
+    backgroundColor: "white",
+    height: 120,
+    marginTop: 30,
+    padding: 15,
+    borderRadius: 20,
+  },
 });
 
 export default Home;
