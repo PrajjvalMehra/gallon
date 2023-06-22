@@ -17,7 +17,7 @@ function Notifications(props) {
   const [notificationInterval, setNotificationInterval] = React.useState("");
 
 
-  const handleGoalUpdate = async () => {
+  const saveConfiguration = async () => {
     Keyboard.dismiss();
     await setDBGoal(localGoal);
     onClose();
@@ -80,7 +80,7 @@ function Notifications(props) {
         }
         size="lg"
         borderRadius={10}
-        onPress={handleGoalUpdate}
+        onPress={saveConfiguration}
       >
         Save configuration
       </Button>
