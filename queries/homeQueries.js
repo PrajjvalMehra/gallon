@@ -1,3 +1,4 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { db } from "../utils/db";
 
 const fetchIntake = async () => {
@@ -26,6 +27,9 @@ const increaseIntake = async (value) => {
     let date = new Date();
     date.setHours(0, 0, 0, 0);
     date = date.toString();
+    const unit = await AsyncStorage.getItem("unit");
+    value = unit === "fl oz" ? value * 0.033814 * 29.574 : value;
+    console.log("value", value);
     await db.transaction((tx) => {
         tx.executeSql("UPDATE data SET intake = intake + ? WHERE date = ?", [
             value,

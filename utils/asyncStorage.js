@@ -50,8 +50,11 @@ async function setGoal(goal) {
 
 async function modifyGoal(goal) {
     try {
-        await AsyncStorage.setItem("goal", `${goal}`);
-        return goal;
+        const unit = await AsyncStorage.getItem("unit");
+        const value = unit === "fl oz" ? goal * 29.574 : goal;
+        await AsyncStorage.setItem("goal", `${value}`);
+
+        return value;
     } catch (e) {
         // error reading value
     }
@@ -75,5 +78,12 @@ async function getUnit() {
     }
 }
 
-export { checkOnboarding, setOnboardung, setUnit, getUnit, setGoal, getGoal, modifyGoal };
-
+export {
+    checkOnboarding,
+    setOnboardung,
+    setUnit,
+    getUnit,
+    setGoal,
+    getGoal,
+    modifyGoal,
+};
