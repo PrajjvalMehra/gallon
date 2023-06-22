@@ -17,14 +17,16 @@ import { useIsFocused } from "@react-navigation/native";
 import { fetchLogsData } from "../../../queries/historyQueries";
 import Moment from "moment";
 import { getGoal } from "../../../utils/asyncStorage";
+import { createTodayRow } from "../../../queries/tableSetup";
 
 function Logs() {
   const [logs, setLogs] = React.useState([]);
-  const [goal, getGoal] = React.useState(0);
+  const [goal, setGoal] = React.useState(0);
 
   const isFocused = useIsFocused();
 
   React.useEffect(() => {
+    createTodayRow();
     if (isFocused) {
       async function fetchLogs() {
         const data = await fetchLogsData();
@@ -32,7 +34,7 @@ function Logs() {
       }
       async function fetchGoal() {
         const data = await getGoal();
-        getGoal(data);
+        setGoal(data);
       }
 
       fetchLogs();
@@ -49,9 +51,9 @@ function Logs() {
           <HStack space={3} alignItems="center" mt="5">
             <Center w="30%">
               <Text>
-                {Moment(item.date).format("MMM")}
-                <Text style={styles.H1}> {Moment(item.date).format("D")} </Text>
-                <Text>{Moment(item.date).format("YYYY")}</Text>
+                {item.date.split(" ")[1]}{" "}
+                <Text style={styles.H1}> {item.date.split(" ")[2]} </Text>
+                <Text>{item.date.split(" ")[3]} </Text>
               </Text>
             </Center>
             <Center w="30%">
