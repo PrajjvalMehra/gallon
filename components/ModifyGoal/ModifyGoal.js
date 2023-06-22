@@ -50,7 +50,7 @@ function ModifyGoal(props) {
                     backgroundColor={"primary.100"}
                     keyboardType="number-pad"
                     type={"number"}
-                    value={"0"}
+                    value={localGoal.toString()}
                     size={"2xl"}
                     onChange={(e) => {
                         setLocalGoal(e.nativeEvent.text);
