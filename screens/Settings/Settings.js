@@ -67,22 +67,20 @@ function Settings() {
     const fetchGoal = () => {
         async function fetchGoal() {
             const goal = await getGoal();
-            handleGoalChange(goal);
+            setGoal(goal);
         }
         fetchGoal();
-    };
-
-    const handleGoalChange = (goal) => {
-        setGoal(goal);
     };
 
     const handleUnitChange = () => {
         const options = ["ml", "fl oz", "Cancel"];
         const cancelButtonIndex = 2;
+        const cancelButtonTintColor = "red";
 
         showActionSheetWithOptions(
             {
                 options,
+                cancelButtonTintColor,
                 cancelButtonIndex,
             },
             (buttonIndex) => {
@@ -103,11 +101,7 @@ function Settings() {
                     variant="unstyled"
                     onPress={() => {
                         setActionElement(
-                            <ModifyGoal
-                                handleGoalChange={handleGoalChange}
-                                goal={goal}
-                                onClose={onClose}
-                            />
+                            <ModifyGoal goal={goal} onClose={onClose} />
                         );
                         onOpen();
                     }}

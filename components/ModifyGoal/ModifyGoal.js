@@ -17,7 +17,7 @@ import { TouchableOpacity } from "react-native";
 import { modifyGoal } from "../../utils/asyncStorage";
 import AppContext from "../../Context/AppContext";
 function ModifyGoal(props) {
-    const { goal, handleGoalChange, onClose } = props;
+    const { goal, onClose } = props;
     const { unit, renderValue } = React.useContext(AppContext);
     const [localGoal, setLocalGoal] = React.useState(goal);
 
@@ -26,16 +26,13 @@ function ModifyGoal(props) {
     };
 
     React.useEffect(() => {
-        setLocalGoal(renderValue(goal));
+        console.log("goal", goal);
     }, [goal]);
 
-    const handleGoalUpdate = () => {
+    const handleGoalUpdate = async () => {
         Keyboard.dismiss();
-        async function updateGoal() {
-            await setDBGoal(localGoal);
-        }
-        updateGoal();
-        handleGoalChange(localGoal);
+        await setDBGoal(localGoal);
+
         onClose();
 
         // handleGoalChange(localGoal);
