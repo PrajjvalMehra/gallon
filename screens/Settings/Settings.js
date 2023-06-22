@@ -6,10 +6,12 @@ import { SafeAreaView } from "react-native";
 import AppContext from "../../Context/AppContext";
 import { StyleSheet } from "react-native";
 import { Keyboard, Platform, KeyboardEvent } from "react-native";
+import { useActionSheet } from "@expo/react-native-action-sheet";
 
 import ModifyGoal from "../../components/ModifyGoal/ModifyGoal";
 import { Feather } from "@expo/vector-icons";
 import { getGoal } from "../../utils/asyncStorage";
+
 const useKeyboardBottomInset = () => {
     const [bottom, setBottom] = React.useState(0);
     const subscriptions = React.useRef([]);
@@ -47,7 +49,11 @@ const useKeyboardBottomInset = () => {
     return bottom;
 };
 function Settings() {
-    const { toggleColorMode, bg, textColor } = React.useContext(AppContext);
+    const { toggleColorMode, bg, textColor, unit, setUnit, renderValue } =
+        React.useContext(AppContext);
+
+    const { showActionSheetWithOptions } = useActionSheet();
+
     const [actionElement, setActionElement] = React.useState();
     const { colorMode } = useColorMode();
     const { isOpen, onOpen, onClose } = useDisclose();
@@ -70,10 +76,30 @@ function Settings() {
         setGoal(goal);
     };
 
+    const handleUnitChange = () => {
+        const options = ["ml", "fl oz", "Cancel"];
+        const cancelButtonIndex = 2;
+
+        showActionSheetWithOptions(
+            {
+                options,
+                cancelButtonIndex,
+            },
+            (buttonIndex) => {
+                if (buttonIndex === 0) {
+                    setUnit("ml");
+                } else if (buttonIndex === 1) {
+                    setUnit("fl oz");
+                }
+            }
+        );
+    };
+
     return (
         <SafeAreaView>
             <View style={styles.container}>
                 <Button
+                    style={styles.settingsPuck}
                     variant="unstyled"
                     onPress={() => {
                         setActionElement(
@@ -97,7 +123,28 @@ function Settings() {
                         </Pressable>
                     </Text>
                     <Text color={textColor} fontSize={"lg"}>
-                        {goal} ml
+                        {renderValue(goal)} {unit}
+                    </Text>
+                </Button>
+                <Button
+                    style={styles.settingsPuck}
+                    variant="unstyled"
+                    onPress={() => {
+                        handleUnitChange();
+                    }}
+                    background={"white"}
+                    width={"50%"}
+                    borderRadius={15}
+                    _pressed={{ opacity: 0.5 }}
+                >
+                    <Text style={styles.modifyGoalText}>
+                        Unit{"                    "}
+                        <Pressable>
+                            <Feather name="edit" size={20} />
+                        </Pressable>
+                    </Text>
+                    <Text color={textColor} fontSize={"lg"}>
+                        {unit}
                     </Text>
                 </Button>
             </View>
@@ -122,17 +169,17 @@ const styles = StyleSheet.create({
     container: {
         padding: 10,
         display: "flex",
-    },
-    modifyGoalContainer: {
-        backgroundColor: "#fff",
-        width: "50%",
-        padding: 20,
-        borderRadius: 20,
-        marginTop: 30,
+        // backgroundColor: "red",
+        flexDirection: "row",
+        flexWrap: "wrap",
+        justifyContent: "space-between",
     },
     modifyGoalText: {
         fontSize: 20,
         fontWeight: "bold",
+    },
+    settingsPuck: {
+        width: "49%",
     },
 });
 

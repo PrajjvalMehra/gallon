@@ -60,7 +60,7 @@ const useKeyboardBottomInset = () => {
 };
 function Home() {
     const isFocus = useIsFocused();
-    const { appState } = React.useContext(AppContext);
+    const { appState, renderValue } = React.useContext(AppContext);
     const [fill, setFill] = React.useState(0);
     const [goal, setGoal] = React.useState(0);
     const [unit, setUnit] = React.useState("ml");
@@ -151,8 +151,8 @@ function Home() {
                                 }
                             >
                                 <Text>
-                                    250
-                                    {unit}
+                                    {" "}
+                                    {renderValue(250).toFixed(0)} {unit}
                                 </Text>
                             </Button>
                         </View>
@@ -173,8 +173,7 @@ function Home() {
                                 }
                             >
                                 <Text>
-                                    500
-                                    {unit}
+                                    {renderValue(500).toFixed(0)} {unit}
                                 </Text>
                             </Button>
                         </View>
@@ -204,8 +203,11 @@ function Home() {
                         <VStack space={2}>
                             <Heading>Today's Progress</Heading>
                             <Text fontSize={"3xl"}>
-                                <Text color={"primary.600"}>{progress}</Text> /{" "}
-                                {goal} <Text fontSize={"2xl"}>{unit}</Text>
+                                <Text color={"primary.600"}>
+                                    {renderValue(progress)}
+                                </Text>{" "}
+                                / {renderValue(goal)}{" "}
+                                <Text fontSize={"2xl"}>{unit}</Text>
                             </Text>
                         </VStack>
                     </View>
