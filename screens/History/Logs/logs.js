@@ -1,3 +1,5 @@
+//Merging to main
+
 import { Text } from "native-base";
 import React from "react";
 import { SafeAreaView, View } from "react-native";
