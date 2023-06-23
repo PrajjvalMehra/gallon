@@ -83,7 +83,7 @@ function Home() {
         async function fetchOnboardingData() {
             const onboarding = await checkOnboarding();
 
-            if (onboarding === "true") {
+            if (onboarding === "false") {
                 setFirstLaunch(true);
                 await setOnboardung();
                 setActionElement(

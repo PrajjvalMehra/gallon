@@ -120,7 +120,7 @@ function Settings() {
                         </Pressable>
                     </Text>
                     <Text color={textColor} fontSize={"lg"}>
-                        recommendation
+                         
                     </Text>
                 </Button>
                 <Button

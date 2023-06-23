@@ -27,24 +27,24 @@ function PersonalizedIntake(props) {
   const calculateWaterIntake = () => {
     const weightInKg = parseFloat(weight);
     const ageInYears = parseInt(age);
-  
+
     if (gender === "male") {
       let dailyIntake = weightInKg * 35;
-  
+
       if (ageInYears >= 9 && ageInYears <= 18) {
         dailyIntake += 300; // Add extra 300 mL for individuals aged 9-18
         console.log("Add extra 300 mL", dailyIntake);
       }
-  
+
       return dailyIntake;
     } else if (gender === "female") {
       let dailyIntake = weightInKg * 31;
-  
+
       if (ageInYears >= 9 && ageInYears <= 18) {
         dailyIntake += 300; // Add extra 300 mL for individuals aged 9-18
         console.log("Add extra 300 mL", dailyIntake);
       }
-  
+
       return dailyIntake;
     } else {
       return null; // Handle case when gender is not selected
@@ -55,7 +55,7 @@ function PersonalizedIntake(props) {
     const dailyIntake = calculateWaterIntake();
     if (dailyIntake !== null) {
       //const goal = { weight, age, gender, dailyIntake };
-      const goal = dailyIntake ;
+      const goal = dailyIntake;
       console.log("goal", goal);
       await setDBGoal(goal);
       onClose();
@@ -78,9 +78,7 @@ function PersonalizedIntake(props) {
           backgroundColor={"primary.100"}
           keyboardType="number-pad"
           type={"number"}
-          value={weight}
           size={"2xl"}
-          placeholder="Weight (in kg)"
           onChange={(e) => {
             setWeight(e.nativeEvent.text);
           }}
@@ -88,7 +86,14 @@ function PersonalizedIntake(props) {
           fontSize={"2xl"}
           clearTextOnFocus={true}
           borderRadius={10}
-        />
+          InputRightElement={
+            <Text fontSize={"xl"} color={"primary.600"}>
+              Weight (in kg)
+              {"   "}
+            </Text>
+          }
+        ></Input>
+
       </View>
 
       <View style={{ marginTop: 20, marginBottom: 10 }}>
@@ -99,7 +104,6 @@ function PersonalizedIntake(props) {
           type={"number"}
           value={age}
           size={"2xl"}
-          placeholder="Age"
           onChange={(e) => {
             setAge(e.nativeEvent.text);
           }}
@@ -107,13 +111,23 @@ function PersonalizedIntake(props) {
           fontSize={"2xl"}
           clearTextOnFocus={true}
           borderRadius={10}
+          InputRightElement={
+            <Text fontSize={"xl"} color={"primary.600"}>
+              Age
+              {"   "}
+            </Text>
+          }
         />
       </View>
 
       <View style={{ marginTop: 20, marginBottom: 10 }}>
+      <Text fontSize="xl" marginBottom={2}>
+                        Gender:
+                    </Text>
         <Button.Group>
-          <Button 
+          <Button
             bgColor={gender === "male" ? "primary.400" : "gray.200"}
+            _text={{ color: "black" }}
             onPress={() => {
               setGender("male");
             }}
@@ -122,6 +136,7 @@ function PersonalizedIntake(props) {
           </Button>
           <Button
             bgColor={gender === "female" ? "primary.400" : "gray.200"}
+            _text={{ color: "black" }}
             onPress={() => {
               setGender("female");
             }}
