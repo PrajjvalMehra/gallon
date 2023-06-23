@@ -20,29 +20,35 @@ import { fetchLogsData } from "../../../queries/historyQueries";
 import Moment from "moment";
 import { getGoal } from "../../../utils/asyncStorage";
 import { createTodayRow } from "../../../queries/tableSetup";
+import AppContext from "../../../Context/AppContext";
 
 function Logs() {
   const [logs, setLogs] = React.useState([]);
   const [goal, setGoal] = React.useState(0);
+  const { appState, renderValue } = React.useContext(AppContext);
 
   const isFocused = useIsFocused();
 
-  React.useEffect(() => {
-    createTodayRow();
-    if (isFocused) {
-      async function fetchLogs() {
-        const data = await fetchLogsData();
-        setLogs(data);
-      }
-      async function fetchGoal() {
-        const data = await getGoal();
-        setGoal(data);
-      }
+  React.useEffect(
+    () => {
+      createTodayRow();
+      if (isFocused) {
+        async function fetchLogs() {
+          const data = await fetchLogsData();
+          setLogs(data);
+        }
+        async function fetchGoal() {
+          const data = await getGoal();
+          setGoal(data);
+        }
 
-      fetchLogs();
-      fetchGoal();
-    }
-  }, [isFocused]);
+        fetchLogs();
+        fetchGoal();
+      }
+    },
+    [isFocused],
+    appState
+  );
 
   return (
     <ScrollView>
@@ -64,14 +70,15 @@ function Logs() {
                   _filledTrack={{
                     bg: "primary.200",
                   }}
-                  value={(item.intake / goal) * 100}
+                  value={(renderValue(item.intake) / renderValue(goal)) * 100}
                   mx="1"
                 />
               </Box>
             </Center>
             <Center w="30%">
               <Text>
-                <Text style={styles.H1}>{item.intake}</Text>/{goal}
+                <Text style={styles.H1}>{renderValue(item.intake)}</Text>/
+                {renderValue(goal)}
               </Text>
             </Center>
           </HStack>
