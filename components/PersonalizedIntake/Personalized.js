@@ -22,6 +22,7 @@ function PersonalizedIntake(props) {
         await modifyGoal(goal);
     };
 
+    //Calculate Function
     const calculateWaterIntake = () => {
         const weightInKg = parseFloat(weight);
         const ageInYears = parseInt(age);
