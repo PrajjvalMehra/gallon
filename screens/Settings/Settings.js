@@ -191,7 +191,7 @@ function Settings() {
                         </Pressable>
                     </Text>
                     <Text color={textColor} fontSize={"lg"}>
-                        sd
+                        Suggested Intake
                     </Text>
                 </Button>
                 <Button
