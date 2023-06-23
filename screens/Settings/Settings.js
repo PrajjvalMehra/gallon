@@ -7,9 +7,10 @@ import AppContext from "../../Context/AppContext";
 import { StyleSheet } from "react-native";
 import { Keyboard, Platform, KeyboardEvent } from "react-native";
 import { useActionSheet } from "@expo/react-native-action-sheet";
-
 import ModifyGoal from "../../components/ModifyGoal/ModifyGoal";
 import { Feather, Entypo } from "@expo/vector-icons";
+import PersonalizedIntake from "../../components/PersonalizedIntake/Personalized";
+import Notifications from "../../components/Notifications/Notifications";
 import { getGoal } from "../../utils/asyncStorage";
 import { dropTable } from "../../queries/tableSetup";
 
@@ -76,6 +77,7 @@ function Settings() {
     const cancelButtonIndex = 2;
     const cancelButtonTintColor = "red";
 
+
     showActionSheetWithOptions(
       {
         options,
@@ -110,8 +112,6 @@ function Settings() {
           },
         },
       ]
-    );
-  };
 
   return (
     <SafeAreaView>
@@ -157,6 +157,31 @@ function Settings() {
             {renderValue(goal)} {unit}
           </Text>
         </Button>
+  <Button
+                    style={styles.settingsPuck}
+                    variant="unstyled"
+                    onPress={() => {
+                        setActionElement(
+                            <PersonalizedIntake goal={goal} onClose={onClose} />
+                        );
+                        onOpen();
+                    }}
+                    background={"white"}
+                    width={"50%"}
+                    borderRadius={15}
+                    marginBottom={2}
+                    _pressed={{ opacity: 0.5 }}
+                >
+                    <Text style={styles.modifyGoalText}>
+                        User Info{"          "}
+                        <Pressable>
+                            <Feather name="edit" size={20} />
+                        </Pressable>
+                    </Text>
+                    <Text color={textColor} fontSize={"lg"}>
+                         
+                    </Text>
+                </Button>
         <Button
           style={styles.settingsPuck}
           variant="unstyled"
