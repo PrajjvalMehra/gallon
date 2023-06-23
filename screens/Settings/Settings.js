@@ -111,7 +111,8 @@ function Settings() {
             setModalVisible(true);
           },
         },
-      ]
+      ]);
+  };
 
   return (
     <SafeAreaView>
@@ -157,31 +158,31 @@ function Settings() {
             {renderValue(goal)} {unit}
           </Text>
         </Button>
-  <Button
-                    style={styles.settingsPuck}
-                    variant="unstyled"
-                    onPress={() => {
-                        setActionElement(
-                            <PersonalizedIntake goal={goal} onClose={onClose} />
-                        );
-                        onOpen();
-                    }}
-                    background={"white"}
-                    width={"50%"}
-                    borderRadius={15}
-                    marginBottom={2}
-                    _pressed={{ opacity: 0.5 }}
-                >
-                    <Text style={styles.modifyGoalText}>
-                        User Info{"          "}
-                        <Pressable>
-                            <Feather name="edit" size={20} />
-                        </Pressable>
-                    </Text>
-                    <Text color={textColor} fontSize={"lg"}>
-                         
-                    </Text>
-                </Button>
+        <Button
+          style={styles.settingsPuck}
+          variant="unstyled"
+          onPress={() => {
+            setActionElement(
+              <PersonalizedIntake goal={goal} onClose={onClose} />
+            );
+            onOpen();
+          }}
+          background={"white"}
+          width={"50%"}
+          borderRadius={15}
+          marginBottom={2}
+          _pressed={{ opacity: 0.5 }}
+        >
+          <Text style={styles.modifyGoalText}>
+            User Info{"          "}
+            <Pressable>
+              <Feather name="edit" size={20} />
+            </Pressable>
+          </Text>
+          <Text color={textColor} fontSize={"lg"}>
+
+          </Text>
+        </Button>
         <Button
           style={styles.settingsPuck}
           variant="unstyled"
@@ -223,6 +224,7 @@ function Settings() {
     </SafeAreaView>
   );
 }
+
 
 const styles = StyleSheet.create({
   container: {
