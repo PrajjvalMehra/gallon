@@ -123,7 +123,7 @@ function Settings() {
                          
                     </Text>
                 </Button>
-                <Button
+                {/* <Button
                     style={styles.settingsPuck}
                     variant="unstyled"
                     onPress={() => {
@@ -147,7 +147,7 @@ function Settings() {
                     <Text color={textColor} fontSize={"lg"}>
                         
                     </Text>
-                </Button>
+                </Button> */}
                 <Button
                     style={styles.settingsPuck}
                     variant="unstyled"
