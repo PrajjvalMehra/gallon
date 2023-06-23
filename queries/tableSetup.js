@@ -49,7 +49,9 @@ const testQuery2 = async () => {
 const dropTable = async () => {
   await db.transaction((tx) => {
     tx.executeSql("Drop Table IF EXISTS Data");
+    //after dropping create a table
     dbSetup();
+    //create a row
     createTodayRow();
   });
 };
