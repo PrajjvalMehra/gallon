@@ -7,9 +7,10 @@ import AppContext from "../../Context/AppContext";
 import { StyleSheet } from "react-native";
 import { Keyboard, Platform, KeyboardEvent } from "react-native";
 import { useActionSheet } from "@expo/react-native-action-sheet";
-
 import ModifyGoal from "../../components/ModifyGoal/ModifyGoal";
 import { Feather, Entypo } from "@expo/vector-icons";
+import PersonalizedIntake from "../../components/PersonalizedIntake/Personalized";
+import Notifications from "../../components/Notifications/Notifications";
 import { getGoal } from "../../utils/asyncStorage";
 import { dropTable } from "../../queries/tableSetup";
 
@@ -52,12 +53,14 @@ function Settings() {
 
   const { showActionSheetWithOptions } = useActionSheet();
 
-  const [actionElement, setActionElement] = React.useState();
-  const { colorMode } = useColorMode();
-  const { isOpen, onOpen, onClose } = useDisclose();
-  const bottomInset = useKeyboardBottomInset();
-  const [goal, setGoal] = React.useState(0);
-  const [modalVisible, setModalVisible] = React.useState(false);
+
+    const [actionElement, setActionElement] = React.useState();
+    const { colorMode } = useColorMode();
+    const { isOpen, onOpen, onClose } = useDisclose();
+    const bottomInset = useKeyboardBottomInset();
+    const [goal, setGoal] = React.useState(0);
+    const [modalVisible, setModalVisible] = React.useState(false);
+
 
   React.useEffect(() => {
     fetchGoal();
@@ -75,8 +78,8 @@ function Settings() {
     const options = ["ml", "fl oz", "Cancel"];
     const cancelButtonIndex = 2;
     const cancelButtonTintColor = "red";
-
-    showActionSheetWithOptions(
+    
+        showActionSheetWithOptions(
       {
         options,
         cancelButtonTintColor,
@@ -92,26 +95,29 @@ function Settings() {
     );
   };
 
-  const resetHistory = () => {
-    Alert.alert(
-      "Reset History Logs",
-      "It will erase ALL your logs. Would you like to continue?",
-      [
-        {
-          text: "Cancel",
-          onPress: () => console.log("Cancel Pressed"),
-          style: "cancel",
-        },
-        {
-          text: "Yes",
-          onPress: () => {
-            dropTable();
-            setModalVisible(true);
-          },
-        },
-      ]
-    );
-  };
+
+    const resetHistory = () => {
+        Alert.alert(
+            "Reset History Logs",
+            "It will erase ALL your logs. Would you like to continue?",
+            [
+                {
+                    text: "Cancel",
+                    onPress: () => console.log("Cancel Pressed"),
+                    style: "cancel",
+                },
+                {
+                    text: "Yes",
+                    onPress: () => {
+                        dropTable();
+                        setModalVisible(true);
+                    },
+                },
+            ]
+        );
+    };
+
+
 
   return (
     <SafeAreaView>
@@ -157,6 +163,31 @@ function Settings() {
             {renderValue(goal)} {unit}
           </Text>
         </Button>
+   <Button
+                    style={styles.settingsPuck}
+                    variant="unstyled"
+                    onPress={() => {
+                        setActionElement(
+                            <PersonalizedIntake goal={goal} onClose={onClose} />
+                        );
+                        onOpen();
+                    }}
+                    background={"white"}
+                    width={"50%"}
+                    borderRadius={15}
+                    marginBottom={2}
+                    _pressed={{ opacity: 0.5 }}
+                >
+                    <Text style={styles.modifyGoalText}>
+                        User Info{"        "}
+                        <Pressable>
+                            <Feather name="edit" size={20} />
+                        </Pressable>
+                    </Text>
+                    <Text color={textColor} fontSize={"lg"}>
+                        Suggested Intake
+                    </Text>
+                </Button>
         <Button
           style={styles.settingsPuck}
           variant="unstyled"
@@ -200,41 +231,69 @@ function Settings() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    padding: 10,
-    display: "flex",
-    // backgroundColor: "red",
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "space-between",
-  },
-  modifyGoalText: {
-    fontSize: 20,
-    fontWeight: "bold",
-  },
-  settingsPuck: {
-    width: "49%",
-  },
-  resetButton: {
-    color: "#dc2626",
-    margin: 20,
-  },
-  centeredView: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "rgba(52, 52, 52, 0.5)",
-  },
-  modalView: {
-    margin: 20,
-    backgroundColor: "white",
-    borderRadius: 20,
-    padding: 35,
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
+
+    container: {
+        padding: 10,
+        display: "flex",
+        // backgroundColor: "red",
+        flexDirection: "row",
+        flexWrap: "wrap",
+        justifyContent: "space-between",
+    },
+    modifyGoalText: {
+        fontSize: 20,
+        fontWeight: "bold",
+    },
+    settingsPuck: {
+        width: "47%",
+        marginTop: 10,
+        height: 70,
+    },
+    resetButton: {
+        color: "#dc2626",
+        margin: 20,
+    },
+    centeredView: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "rgba(52, 52, 52, 0.5)",
+    },
+    modalView: {
+        margin: 20,
+        backgroundColor: "white",
+        borderRadius: 20,
+        padding: 35,
+        alignItems: "center",
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
+    },
+    button: {
+        borderRadius: 20,
+        padding: 10,
+        elevation: 2,
+    },
+    buttonOpen: {
+        backgroundColor: "#F194FF",
+    },
+    buttonClose: {
+        backgroundColor: "#2196F3",
+    },
+    textStyle: {
+        color: "white",
+        fontWeight: "bold",
+        textAlign: "center",
+    },
+    modalText: {
+        marginBottom: 15,
+        textAlign: "center",
+
     },
     shadowOpacity: 0.25,
     shadowRadius: 4,
