@@ -6,9 +6,11 @@ import { SafeAreaView, Alert, Modal } from "react-native";
 import AppContext from "../../Context/AppContext";
 import { StyleSheet } from "react-native";
 import { Keyboard, Platform, KeyboardEvent } from "react-native";
-
+import { useActionSheet } from "@expo/react-native-action-sheet";
 import ModifyGoal from "../../components/ModifyGoal/ModifyGoal";
 import { Feather, Entypo } from "@expo/vector-icons";
+import PersonalizedIntake from "../../components/PersonalizedIntake/Personalized";
+import Notifications from "../../components/Notifications/Notifications";
 import { getGoal } from "../../utils/asyncStorage";
 import { dropTable } from "../../queries/tableSetup";
 
@@ -46,7 +48,11 @@ const useKeyboardBottomInset = () => {
   return bottom;
 };
 function Settings() {
-  const { toggleColorMode, bg, textColor } = React.useContext(AppContext);
+  const { toggleColorMode, bg, textColor, unit, setUnit, renderValue } =
+    React.useContext(AppContext);
+
+  const { showActionSheetWithOptions } = useActionSheet();
+
   const [actionElement, setActionElement] = React.useState();
   const { colorMode } = useColorMode();
   const { isOpen, onOpen, onClose } = useDisclose();
@@ -61,13 +67,30 @@ function Settings() {
   const fetchGoal = () => {
     async function fetchGoal() {
       const goal = await getGoal();
-      handleGoalChange(goal);
+      setGoal(goal);
     }
     fetchGoal();
   };
 
-  const handleGoalChange = (goal) => {
-    setGoal(goal);
+  const handleUnitChange = () => {
+    const options = ["ml", "fl oz", "Cancel"];
+    const cancelButtonIndex = 2;
+    const cancelButtonTintColor = "red";
+
+    showActionSheetWithOptions(
+      {
+        options,
+        cancelButtonTintColor,
+        cancelButtonIndex,
+      },
+      (buttonIndex) => {
+        if (buttonIndex === 0) {
+          setUnit("ml");
+        } else if (buttonIndex === 1) {
+          setUnit("fl oz");
+        }
+      }
+    );
   };
 
   const resetHistory = () => {
@@ -114,15 +137,10 @@ function Settings() {
 
       <View style={styles.container}>
         <Button
+          style={styles.settingsPuck}
           variant="unstyled"
           onPress={() => {
-            setActionElement(
-              <ModifyGoal
-                handleGoalChange={handleGoalChange}
-                goal={goal}
-                onClose={onClose}
-              />
-            );
+            setActionElement(<ModifyGoal goal={goal} onClose={onClose} />);
             onOpen();
           }}
           background={"white"}
@@ -137,7 +155,53 @@ function Settings() {
             </Pressable>
           </Text>
           <Text color={textColor} fontSize={"lg"}>
-            {goal} ml
+            {renderValue(goal)} {unit}
+          </Text>
+        </Button>
+        <Button
+          style={styles.settingsPuck}
+          variant="unstyled"
+          onPress={() => {
+            setActionElement(
+              <PersonalizedIntake goal={goal} onClose={onClose} />
+            );
+            onOpen();
+          }}
+          background={"white"}
+          width={"50%"}
+          borderRadius={15}
+          marginBottom={2}
+          _pressed={{ opacity: 0.5 }}
+        >
+          <Text style={styles.modifyGoalText}>
+            User Info{"        "}
+            <Pressable>
+              <Feather name="edit" size={20} />
+            </Pressable>
+          </Text>
+          <Text color={textColor} fontSize={"lg"}>
+            Suggested Intake
+          </Text>
+        </Button>
+        <Button
+          style={styles.settingsPuck}
+          variant="unstyled"
+          onPress={() => {
+            handleUnitChange();
+          }}
+          background={"white"}
+          width={"50%"}
+          borderRadius={15}
+          _pressed={{ opacity: 0.5 }}
+        >
+          <Text style={styles.modifyGoalText}>
+            Unit{"                  "}
+            <Pressable>
+              <Feather name="edit" size={20} />
+            </Pressable>
+          </Text>
+          <Text color={textColor} fontSize={"lg"}>
+            {unit}
           </Text>
         </Button>
       </View>
@@ -165,17 +229,19 @@ const styles = StyleSheet.create({
   container: {
     padding: 10,
     display: "flex",
-  },
-  modifyGoalContainer: {
-    backgroundColor: "#fff",
-    width: "50%",
-    padding: 20,
-    borderRadius: 20,
-    marginTop: 30,
+    // backgroundColor: "red",
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-between",
   },
   modifyGoalText: {
     fontSize: 20,
     fontWeight: "bold",
+  },
+  settingsPuck: {
+    width: "47%",
+    marginTop: 10,
+    height: 70,
   },
   resetButton: {
     color: "#dc2626",
@@ -225,3 +291,5 @@ const styles = StyleSheet.create({
 });
 
 export default Settings;
+
+//[#14] Closes
