@@ -65,7 +65,7 @@ function PersonalizedIntake(props) {
     };
 
     return (
-        <KeyboardAvoidingView bounces={false}>
+        <KeyboardAvoidingView behavior="height">
             <Heading size={"lg"}>User Info</Heading>
             <Heading size={"sm"}>
                 Enter your details to get personalized intake recommendation
