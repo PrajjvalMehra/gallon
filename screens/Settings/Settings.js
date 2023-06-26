@@ -122,7 +122,7 @@ function Settings() {
     };
 
     return (
-        <SafeAreaView>
+        <SafeAreaView style={{ height: "100%" }}>
             <Modal
                 transparent={true}
                 visible={modalVisible}
@@ -220,9 +220,7 @@ function Settings() {
                     </Text>
                 </Button>
             </View>
-            <Button style={styles.resetButton} onPress={resetHistory}>
-                Reset History Logs
-            </Button>
+
             <Actionsheet
                 isOpen={isOpen}
                 onClose={() => {
@@ -238,6 +236,9 @@ function Settings() {
                     </Actionsheet.Content>
                 </Animated.View>
             </Actionsheet>
+            <Button style={styles.resetButton} onPress={resetHistory}>
+                Reset History Logs
+            </Button>
         </SafeAreaView>
     );
 }
@@ -263,6 +264,10 @@ const styles = StyleSheet.create({
     resetButton: {
         color: "#dc2626",
         margin: 20,
+        borderRadius: 10,
+        bottom: 0,
+        position: "absolute",
+        width: "90%",
     },
     centeredView: {
         flex: 1,
