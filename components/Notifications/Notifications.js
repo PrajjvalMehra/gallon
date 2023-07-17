@@ -67,6 +67,12 @@ function DynamicNotification(props) {
 
         onClose();
     };
+    
+    const handleGoalUpdate = async () => {
+        Keyboard.dismiss();
+        await setDBGoal(localGoal);
+        onClose();
+      };
 
     return (
         <KeyboardAvoidingView behavior="padding" enabled>

@@ -23,30 +23,32 @@ import { createTodayRow } from "../../../queries/tableSetup";
 import AppContext from "../../../Context/AppContext";
 
 function Logs() {
-    const { renderValue, unit } = React.useContext(AppContext);
     const [logs, setLogs] = React.useState([]);
     const [goal, setGoal] = React.useState(0);
+    const { appState, renderValue, unit } = React.useContext(AppContext);
 
     const isFocused = useIsFocused();
 
-    React.useEffect(() => {
-        createTodayRow();
-        if (isFocused) {
-            async function fetchLogs() {
-                const data = await fetchLogsData();
-                setLogs(data);
-            }
-            async function fetchGoal() {
-                const data = await getGoal();
-                setGoal(data);
-            }
+    React.useEffect(
+        () => {
+            createTodayRow();
+            if (isFocused) {
+                async function fetchLogs() {
+                    const data = await fetchLogsData();
+                    setLogs(data);
+                }
+                async function fetchGoal() {
+                    const data = await getGoal();
+                    setGoal(data);
+                }
 
-            fetchLogs();
-            fetchGoal();
-        }
-    }, [isFocused]);
-
-    var logsDay = "";
+                fetchLogs();
+                fetchGoal();
+            }
+        },
+        [isFocused],
+        appState
+    );
 
     return (
         <ScrollView>
@@ -57,6 +59,7 @@ function Logs() {
                             <Text>
                                 {item.date.split(" ")[1]}{" "}
                                 <Text style={styles.H1}>
+                                    {" "}
                                     {item.date.split(" ")[2]}{" "}
                                 </Text>
                                 <Text>{item.date.split(" ")[3]} </Text>
@@ -70,7 +73,11 @@ function Logs() {
                                     _filledTrack={{
                                         bg: "primary.200",
                                     }}
-                                    value={(item.intake / goal) * 100}
+                                    value={
+                                        (renderValue(item.intake) /
+                                            renderValue(goal)) *
+                                        100
+                                    }
                                     mx="1"
                                 />
                             </Box>
@@ -78,9 +85,9 @@ function Logs() {
                         <Center w="30%">
                             <Text>
                                 <Text style={styles.H1}>
-                                    {renderValue(item.intake).toFixed(0)}
+                                    {renderValue(item.intake)}
                                 </Text>
-                                /{renderValue(goal).toFixed(0)} {unit}
+                                /{renderValue(goal)} {unit}
                             </Text>
                         </Center>
                     </HStack>
