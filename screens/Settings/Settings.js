@@ -149,6 +149,56 @@ function Settings() {
             </Modal>
 
             <View style={styles.container}>
+            <Button
+                    style={styles.settingsPuck}
+                    variant="unstyled"
+                    onPress={() => {
+                        setActionElement(
+                            <PersonalizedIntake goal={goal} onClose={onClose} />
+                        );
+                        onOpen();
+                    }}
+                    background={"white"}
+                    width={"50%"}
+                    borderRadius={15}
+                    marginBottom={2}
+                    _pressed={{ opacity: 0.5 }}
+                >
+                    <Text style={styles.modifyGoalText}>
+                        User Info{"          "}
+                        <Pressable>
+                            <Feather name="edit" size={20} />
+                        </Pressable>
+                    </Text>
+                    <Text color={textColor} fontSize={"lg"}>
+                         
+                    </Text>
+                </Button>
+                <Button
+                    style={styles.settingsPuck}
+                    variant="unstyled"
+                    onPress={() => {
+                        setActionElement(
+                            <Notifications goal={goal} onClose={onClose} />
+                        );
+                        onOpen();
+                    }}
+                    background={"white"}
+                    width={"50%"}
+                    borderRadius={15}
+                    marginBottom={2}
+                    _pressed={{ opacity: 0.5 }}
+                >
+                    <Text style={styles.modifyGoalText}>
+                        Notifications{"   "}
+                        <Pressable>
+                            <Feather name="edit" size={20} />
+                        </Pressable>
+                    </Text>
+                    <Text color={textColor} fontSize={"lg"}>
+                        
+                    </Text>
+                </Button>
                 <Button
                     style={styles.settingsPuck}
                     variant="unstyled"
@@ -161,6 +211,7 @@ function Settings() {
                     background={"white"}
                     width={"50%"}
                     borderRadius={15}
+                    marginBottom={2}
                     _pressed={{ opacity: 0.5 }}
                 >
                     <Text style={styles.modifyGoalText}>
@@ -207,6 +258,7 @@ function Settings() {
                     background={"white"}
                     width={"50%"}
                     borderRadius={15}
+                    marginBottom={2}
                     _pressed={{ opacity: 0.5 }}
                 >
                     <Text style={styles.modifyGoalText}>
