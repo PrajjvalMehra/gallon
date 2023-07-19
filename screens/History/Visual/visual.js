@@ -161,3 +161,5 @@ function Visual() {
 }
 
 export default Visual;
+
+//*added graph
