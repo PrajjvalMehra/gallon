@@ -32,7 +32,6 @@ function PersonalizedIntake(props) {
 
             if (ageInYears >= 9 && ageInYears <= 18) {
                 dailyIntake += 300; // Add extra 300 mL for individuals aged 9-18
-                console.log("Add extra 300 mL", dailyIntake);
             }
 
             return dailyIntake;
@@ -41,7 +40,6 @@ function PersonalizedIntake(props) {
 
             if (ageInYears >= 9 && ageInYears <= 18) {
                 dailyIntake += 300; // Add extra 300 mL for individuals aged 9-18
-                console.log("Add extra 300 mL", dailyIntake);
             }
 
             return dailyIntake;
@@ -55,7 +53,6 @@ function PersonalizedIntake(props) {
         if (dailyIntake !== null) {
             //const goal = { weight, age, gender, dailyIntake };
             const goal = dailyIntake;
-            console.log("goal", goal);
             await setDBGoal(goal);
             onClose();
         } else {

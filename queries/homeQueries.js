@@ -29,7 +29,6 @@ const increaseIntake = async (value) => {
     date = date.toString();
     const unit = await AsyncStorage.getItem("unit");
     value = unit === "fl oz" ? value * 0.033814 * 29.574 : value;
-    console.log("value", value);
     await db.transaction((tx) => {
         tx.executeSql("UPDATE data SET intake = intake + ? WHERE date = ?", [
             value,
