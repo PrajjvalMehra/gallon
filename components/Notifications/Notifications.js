@@ -86,6 +86,7 @@ function Notifications(props) {
       </Button>
     </KeyboardAvoidingView>
   );
+  //Notification Class
 }
 
 export default Notifications;
