@@ -1,6 +1,6 @@
 # gallon
 
-A water tracking to help users track their daily water intake and stay hydrated. Built using React Native.
+A water-tracking mobile application to help users track their daily water intake and stay hydrated. Built using React Native.
 
 ---
 
