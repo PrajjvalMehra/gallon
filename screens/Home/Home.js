@@ -7,10 +7,7 @@ import {
     useDisclose,
     Divider,
 } from "native-base";
-import {
-    checkOnboarding,
-    setOnboardung,
-} from "../../utils/asyncStorage";
+import { checkOnboarding, setOnboardung } from "../../utils/asyncStorage";
 import { AnimatedCircularProgress } from "react-native-circular-progress";
 import React from "react";
 import { StyleSheet } from "react-native";
@@ -74,7 +71,6 @@ function Home() {
     const { isOpen, onOpen, onClose } = useDisclose();
     const [firstLaunch, setFirstLaunch] = React.useState(null);
 
-
     React.useEffect(() => {
         if (!isOpen) Keyboard.dismiss();
     }, [isOpen]);
@@ -93,7 +89,6 @@ function Home() {
             } else {
                 setFirstLaunch(false);
             }
-
         }
 
         async function fetchUnit() {
@@ -148,9 +143,9 @@ function Home() {
                             fill={fill}
                             tintColor="#a5f3fc"
                             lineCap="round"
-                            animate={(fill) => { }}
+                            animate={(fill) => {}}
                             rotation={0}
-                            onAnimationComplete={() => { }}
+                            onAnimationComplete={() => {}}
                             backgroundColor={"#164e63"}
                         >
                             {(fill) => (
@@ -250,7 +245,6 @@ function Home() {
                                 />
                             )}
                             {actionElement}
-
                         </View>
                     </Actionsheet.Content>
                 </Actionsheet>
