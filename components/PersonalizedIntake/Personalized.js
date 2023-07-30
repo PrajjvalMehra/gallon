@@ -13,7 +13,7 @@ import AppContext from "../../Context/AppContext";
 
 function PersonalizedIntake(props) {
     const { goal, onClose } = props;
-    const { unit } = React.useContext(AppContext);
+    const { unit, textColor, mainBgColor } = React.useContext(AppContext);
     const [weight, setWeight] = React.useState("");
     const [age, setAge] = React.useState("");
     const [gender, setGender] = React.useState("male");
@@ -63,8 +63,10 @@ function PersonalizedIntake(props) {
 
     return (
         <KeyboardAvoidingView behavior="height">
-            <Heading size={"lg"}>User Info</Heading>
-            <Heading size={"sm"}>
+            <Heading color={textColor} size={"lg"}>
+                User Info
+            </Heading>
+            <Heading color={textColor} size={"sm"}>
                 Enter your details to get personalized intake recommendation
                 from us
             </Heading>
@@ -117,7 +119,7 @@ function PersonalizedIntake(props) {
             </View>
 
             <View style={{ marginTop: 20, marginBottom: 10 }}>
-                <Text fontSize="xl" marginBottom={2}>
+                <Text color={textColor} fontSize="xl" marginBottom={2}>
                     Gender:
                 </Text>
                 <Button.Group>

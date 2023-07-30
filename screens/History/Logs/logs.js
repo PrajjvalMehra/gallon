@@ -5,15 +5,15 @@ import React from "react";
 import { SafeAreaView, View } from "react-native";
 import styles from "./styles";
 import {
-  Divider,
-  Stack,
-  Heading,
-  VStack,
-  HStack,
-  ScrollView,
-  Center,
-  Box,
-  Progress,
+    Divider,
+    Stack,
+    Heading,
+    VStack,
+    HStack,
+    ScrollView,
+    Center,
+    Box,
+    Progress,
 } from "native-base";
 import { useIsFocused } from "@react-navigation/native";
 import { fetchLogsData } from "../../../queries/historyQueries";
@@ -23,68 +23,86 @@ import { createTodayRow } from "../../../queries/tableSetup";
 import AppContext from "../../../Context/AppContext";
 
 function Logs() {
-  const [logs, setLogs] = React.useState([]);
-  const [goal, setGoal] = React.useState(0);
-  const { appState, renderValue, unit } = React.useContext(AppContext);
-  const isFocused = useIsFocused();
+    const [logs, setLogs] = React.useState([]);
+    const [goal, setGoal] = React.useState(0);
+    const {
+        appState,
+        renderValue,
+        unit,
+        alternateTextColor,
+        textColor,
+        mainBgColor,
+    } = React.useContext(AppContext);
+    const isFocused = useIsFocused();
 
-  React.useEffect(
-    () => {
-      createTodayRow();
-      if (isFocused) {
-        async function fetchLogs() {
-          const data = await fetchLogsData();
-          setLogs(data);
-        }
-        async function fetchGoal() {
-          const data = await getGoal();
-          setGoal(data);
-        }
+    React.useEffect(
+        () => {
+            createTodayRow();
+            if (isFocused) {
+                async function fetchLogs() {
+                    const data = await fetchLogsData();
+                    setLogs(data);
+                }
+                async function fetchGoal() {
+                    const data = await getGoal();
+                    setGoal(data);
+                }
 
-        fetchLogs();
-        fetchGoal();
-      }
-    },
-    [isFocused],
-    appState
-  );
+                fetchLogs();
+                fetchGoal();
+            }
+        },
+        [isFocused],
+        appState
+    );
 
-  return (
-    <ScrollView style={{ backgroundColor: "color.red" }}>
-      {logs.map((item, key) => (
-        <Stack key={key} space={3} alignItems="center">
-          <HStack space={3} alignItems="center" mt="5">
-            <Center w="30%">
-              <Text>
-                {item.date.split(" ")[1]}{" "}
-                <Text style={styles.H1}> {item.date.split(" ")[2]} </Text>
-                <Text>{item.date.split(" ")[3]} </Text>
-              </Text>
-            </Center>
-            <Center w="30%">
-              <Box w="100%">
-                <Progress
-                  size="md"
-                  bg="primary.900"
-                  _filledTrack={{
-                    bg: "primary.200",
-                  }}
-                  value={(renderValue(item.intake) / renderValue(goal)) * 100}
-                  mx="1"
-                />
-              </Box>
-            </Center>
-            <Center w="30%">
-              <Text>
-                <Text style={styles.H1}>{renderValue(item.intake)}</Text>/
-                {renderValue(goal)} {unit}
-              </Text>
-            </Center>
-          </HStack>
-        </Stack>
-      ))}
-    </ScrollView>
-  );
+    return (
+        <ScrollView style={{ backgroundColor: mainBgColor, height: "100%" }}>
+            {logs.map((item, key) => (
+                <Stack key={key} space={3} alignItems="center">
+                    <HStack space={3} alignItems="center" mt="5">
+                        <Center w="30%">
+                            <Text color={textColor}>
+                                {item.date.split(" ")[1]}{" "}
+                                <Text color={"red"} style={styles.H1}>
+                                    {" "}
+                                    {item.date.split(" ")[2]}{" "}
+                                </Text>
+                                <Text color={textColor}>
+                                    {item.date.split(" ")[3]}{" "}
+                                </Text>
+                            </Text>
+                        </Center>
+                        <Center w="30%">
+                            <Box w="100%">
+                                <Progress
+                                    size="md"
+                                    bg="primary.900"
+                                    _filledTrack={{
+                                        bg: "primary.200",
+                                    }}
+                                    value={
+                                        (renderValue(item.intake) /
+                                            renderValue(goal)) *
+                                        100
+                                    }
+                                    mx="1"
+                                />
+                            </Box>
+                        </Center>
+                        <Center w="30%">
+                            <Text color={textColor}>
+                                <Text style={styles.H1}>
+                                    {renderValue(item.intake)}
+                                </Text>
+                                /{renderValue(goal)} {unit}
+                            </Text>
+                        </Center>
+                    </HStack>
+                </Stack>
+            ))}
+        </ScrollView>
+    );
 }
 
 export default Logs;

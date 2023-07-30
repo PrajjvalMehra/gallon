@@ -62,7 +62,8 @@ const useKeyboardBottomInset = () => {
 };
 function Home() {
     const isFocus = useIsFocused();
-    const { appState, renderValue } = React.useContext(AppContext);
+    const { appState, renderValue, textColor, colorMode, mainBgColor } =
+        React.useContext(AppContext);
     const [actionElement, setActionElement] = React.useState();
     const [fill, setFill] = React.useState(0);
     const [goal, setGoal] = React.useState(0);
@@ -128,10 +129,21 @@ function Home() {
         <KeyboardAvoidingView
             behavior={Platform.OS === "ios" ? "padding" : "height"}
         >
-            <ScrollView style={styles.container}>
+            <ScrollView
+                style={[
+                    styles.container,
+                    {
+                        backgroundColor:
+                            colorMode === "light" ? "#f5f5f5" : "black",
+                        height: "100%",
+                    },
+                ]}
+            >
                 <VStack>
                     <View style={styles.headerContainer}>
-                        <Heading>{new Date().toDateString()}</Heading>
+                        <Heading color={textColor}>
+                            {new Date().toDateString()}
+                        </Heading>
                     </View>
                     <View style={styles.progressContainer}>
                         <AnimatedCircularProgress
@@ -149,7 +161,9 @@ function Home() {
                             backgroundColor={"#164e63"}
                         >
                             {(fill) => (
-                                <Text fontSize={"4xl"}>{Math.ceil(fill)}%</Text>
+                                <Text color={textColor} fontSize={"4xl"}>
+                                    {Math.ceil(fill)}%
+                                </Text>
                             )}
                         </AnimatedCircularProgress>
                     </View>
@@ -158,7 +172,11 @@ function Home() {
                             <Button
                                 styles={styles.modifyButton}
                                 onPress={(e) => increaseProgress(250)}
-                                bgColor={"primary.100"}
+                                bgColor={
+                                    colorMode === "light"
+                                        ? "primary.100"
+                                        : "primary.600"
+                                }
                                 borderRadius={10}
                                 _pressed={{ bg: "primary.200" }}
                                 variant={"subtle"}
@@ -166,11 +184,11 @@ function Home() {
                                     <MaterialCommunityIcons
                                         name="cup-water"
                                         size={24}
-                                        color="black"
+                                        color={textColor}
                                     />
                                 }
                             >
-                                <Text>
+                                <Text color={textColor}>
                                     {" "}
                                     {renderValue(250).toFixed(0)} {unit}
                                 </Text>
@@ -181,18 +199,22 @@ function Home() {
                                 styles={styles.modifyButton}
                                 onPress={(e) => increaseProgress(500)}
                                 borderRadius={10}
-                                bgColor={"primary.200"}
+                                bgColor={
+                                    colorMode === "light"
+                                        ? "primary.200"
+                                        : "primary.700"
+                                }
                                 _pressed={{ bg: "primary.300" }}
                                 variant={"subtle"}
                                 endIcon={
                                     <MaterialCommunityIcons
                                         name="bottle-wine-outline"
                                         size={24}
-                                        color="black"
+                                        color={textColor}
                                     />
                                 }
                             >
-                                <Text>
+                                <Text color={textColor}>
                                     {renderValue(500).toFixed(0)} {unit}
                                 </Text>
                             </Button>
@@ -200,7 +222,11 @@ function Home() {
                         <View style={styles.buttonContainer}>
                             <Button
                                 styles={styles.modifyButton}
-                                bgColor={"primary.300"}
+                                bgColor={
+                                    colorMode === "light"
+                                        ? "primary.300"
+                                        : "primary.900"
+                                }
                                 _pressed={{ bg: "primary.400" }}
                                 onPress={(e) => {
                                     onOpen();
@@ -211,19 +237,35 @@ function Home() {
                                     <Ionicons
                                         name="ios-water-outline"
                                         size={22}
-                                        color="black"
+                                        color={textColor}
                                     />
                                 }
                             >
-                                <Text>Modify</Text>
+                                <Text color={textColor}>Modify</Text>
                             </Button>
                         </View>
                     </View>
-                    <View style={styles.dataContainer}>
+                    <View
+                        style={[
+                            styles.dataContainer,
+                            {
+                                backgroundColor:
+                                    colorMode === "light" ? "white" : "#164e63",
+                            },
+                        ]}
+                    >
                         <VStack space={2}>
-                            <Heading>Today's Progress</Heading>
-                            <Text fontSize={"3xl"}>
-                                <Text color={"primary.600"}>
+                            <Heading color={textColor}>
+                                Today's Progress
+                            </Heading>
+                            <Text color={textColor} fontSize={"3xl"}>
+                                <Text
+                                    color={
+                                        colorMode === "light"
+                                            ? "primary.600"
+                                            : "primary.200"
+                                    }
+                                >
                                     {renderValue(progress)}
                                 </Text>{" "}
                                 / {renderValue(goal)}{" "}
@@ -233,7 +275,13 @@ function Home() {
                     </View>
                 </VStack>
                 <Actionsheet size="full" isOpen={isOpen} onClose={onClose}>
-                    <Actionsheet.Content bottom={bottomInset}>
+                    <Actionsheet.Content
+                        bottom={bottomInset}
+                        style={{
+                            backgroundColor:
+                                colorMode === "light" ? "white" : "primary.900",
+                        }}
+                    >
                         <View width={"100%"} padding={2}>
                             {!firstLaunch && (
                                 <CustomIntake

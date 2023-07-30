@@ -18,7 +18,7 @@ import { modifyGoal } from "../../utils/asyncStorage";
 import AppContext from "../../Context/AppContext";
 function ModifyGoal(props) {
     const { goal, onClose } = props;
-    const { unit, renderValue } = React.useContext(AppContext);
+    const { unit, renderValue, textColor } = React.useContext(AppContext);
     const [localGoal, setLocalGoal] = React.useState(goal);
 
     const setDBGoal = async (goal) => {
@@ -40,7 +40,9 @@ function ModifyGoal(props) {
 
     return (
         <KeyboardAvoidingView bounces={false}>
-            <Heading size={"lg"}>Modify Daily Goal</Heading>
+            <Heading color={textColor} size={"lg"}>
+                Modify Daily Goal
+            </Heading>
             <View style={{ marginTop: 20, marginBottom: 10 }}>
                 <Input
                     variant={"filled"}

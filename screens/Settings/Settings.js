@@ -1,4 +1,11 @@
-import { View, Button, Pressable, Actionsheet, useDisclose } from "native-base";
+import {
+    View,
+    Button,
+    Pressable,
+    Actionsheet,
+    useDisclose,
+    Fab,
+} from "native-base";
 import { Text } from "native-base";
 import { useColorMode, KeyboardAvoidingView } from "native-base";
 import React from "react";
@@ -46,22 +53,38 @@ const useKeyboardBottomInset = () => {
     return bottom;
 };
 function Settings() {
-    const { toggleColorMode, bg, textColor, unit, setUnit, renderValue } =
-        React.useContext(AppContext);
+    const {
+        toggleColorMode,
+        bg,
+        textColor,
+        unit,
+        setUnit,
+        renderValue,
+        colorMode,
+        mainBgColor,
+    } = React.useContext(AppContext);
 
     const { showActionSheetWithOptions } = useActionSheet();
 
     const [actionElement, setActionElement] = React.useState();
-    const { colorMode } = useColorMode();
     const { isOpen, onOpen, onClose } = useDisclose();
     const bottomInset = useKeyboardBottomInset();
     const [goal, setGoal] = React.useState(0);
+    const [puckIconColor, setPuckIconColor] = React.useState("black");
     const [modalVisible, setModalVisible] = React.useState(false);
     const bottomAni = React.useRef(new Animated.Value(bottomInset)).current;
 
     React.useEffect(() => {
         fetchGoal();
     }, [goal, isOpen]);
+
+    React.useEffect(() => {
+        if (colorMode === "dark") {
+            setPuckIconColor("white");
+        } else {
+            setPuckIconColor("black");
+        }
+    }, [colorMode]);
 
     const fetchGoal = () => {
         async function fetchGoal() {
@@ -100,6 +123,8 @@ function Settings() {
             }
         );
     };
+
+    console.log(colorMode);
 
     const resetHistory = () => {
         Alert.alert(
@@ -148,8 +173,16 @@ function Settings() {
                 </View>
             </Modal>
 
-            <View style={styles.container}>
-            <Button
+            <View
+                style={[
+                    styles.container,
+                    {
+                        backgroundColor:
+                            colorMode === "light" ? "#f5f5f5" : "black",
+                    },
+                ]}
+            >
+                {/* <Button
                     style={styles.settingsPuck}
                     variant="unstyled"
                     onPress={() => {
@@ -170,12 +203,16 @@ function Settings() {
                             <Feather name="edit" size={20} />
                         </Pressable>
                     </Text>
-                    <Text color={textColor} fontSize={"lg"}>
-                         
-                    </Text>
-                </Button>
+                    <Text color={textColor} fontSize={"lg"}></Text>
+                </Button> */}
                 <Button
-                    style={styles.settingsPuck}
+                    style={[
+                        styles.settingsPuck,
+                        {
+                            backgroundColor:
+                                colorMode === "dark" ? "#1f2937" : "white",
+                        },
+                    ]}
                     variant="unstyled"
                     onPress={() => {
                         setActionElement(
@@ -189,18 +226,28 @@ function Settings() {
                     marginBottom={2}
                     _pressed={{ opacity: 0.5 }}
                 >
-                    <Text style={styles.modifyGoalText}>
-                        Notifications{"   "}
+                    <Text color={textColor} style={styles.modifyGoalText}>
+                        Alerts{"              "}
                         <Pressable>
-                            <Feather name="edit" size={20} />
+                            <Feather
+                                color={puckIconColor}
+                                name="edit"
+                                size={20}
+                            />
                         </Pressable>
                     </Text>
                     <Text color={textColor} fontSize={"lg"}>
-                        
+                        Notifications
                     </Text>
                 </Button>
                 <Button
-                    style={styles.settingsPuck}
+                    style={[
+                        styles.settingsPuck,
+                        {
+                            backgroundColor:
+                                colorMode === "dark" ? "#1f2937" : "white",
+                        },
+                    ]}
                     variant="unstyled"
                     onPress={() => {
                         setActionElement(
@@ -208,16 +255,19 @@ function Settings() {
                         );
                         onOpen();
                     }}
-                    background={"white"}
                     width={"50%"}
                     borderRadius={15}
                     marginBottom={2}
                     _pressed={{ opacity: 0.5 }}
                 >
-                    <Text style={styles.modifyGoalText}>
+                    <Text color={textColor} style={styles.modifyGoalText}>
                         Daily Goal{"      "}
                         <Pressable>
-                            <Feather name="edit" size={20} />
+                            <Feather
+                                color={puckIconColor}
+                                name="edit"
+                                size={20}
+                            />
                         </Pressable>
                     </Text>
                     <Text color={textColor} fontSize={"lg"}>
@@ -225,7 +275,13 @@ function Settings() {
                     </Text>
                 </Button>
                 <Button
-                    style={styles.settingsPuck}
+                    style={[
+                        styles.settingsPuck,
+                        {
+                            backgroundColor:
+                                colorMode === "dark" ? "#1f2937" : "white",
+                        },
+                    ]}
                     variant="unstyled"
                     onPress={() => {
                         setActionElement(
@@ -239,10 +295,14 @@ function Settings() {
                     marginBottom={2}
                     _pressed={{ opacity: 0.5 }}
                 >
-                    <Text style={styles.modifyGoalText}>
+                    <Text color={textColor} style={styles.modifyGoalText}>
                         User Info{"        "}
                         <Pressable>
-                            <Feather name="edit" size={20} />
+                            <Feather
+                                color={puckIconColor}
+                                name="edit"
+                                size={20}
+                            />
                         </Pressable>
                     </Text>
                     <Text color={textColor} fontSize={"lg"}>
@@ -250,7 +310,13 @@ function Settings() {
                     </Text>
                 </Button>
                 <Button
-                    style={styles.settingsPuck}
+                    style={[
+                        styles.settingsPuck,
+                        {
+                            backgroundColor:
+                                colorMode === "dark" ? "#1f2937" : "white",
+                        },
+                    ]}
                     variant="unstyled"
                     onPress={() => {
                         handleUnitChange();
@@ -261,10 +327,14 @@ function Settings() {
                     marginBottom={2}
                     _pressed={{ opacity: 0.5 }}
                 >
-                    <Text style={styles.modifyGoalText}>
+                    <Text color={textColor} style={styles.modifyGoalText}>
                         Unit{"                  "}
                         <Pressable>
-                            <Feather name="edit" size={20} />
+                            <Feather
+                                color={puckIconColor}
+                                name="edit"
+                                size={20}
+                            />
                         </Pressable>
                     </Text>
                     <Text color={textColor} fontSize={"lg"}>
@@ -281,7 +351,11 @@ function Settings() {
                 }}
             >
                 <Animated.View style={{ width: "100%", bottom: bottomAni }}>
-                    <Actionsheet.Content>
+                    <Actionsheet.Content
+                        backgroundColor={
+                            colorMode === "dark" ? "primary.900" : "white"
+                        }
+                    >
                         <View width={"100%"} padding={2}>
                             {actionElement}
                         </View>
@@ -299,7 +373,7 @@ const styles = StyleSheet.create({
     container: {
         padding: 10,
         display: "flex",
-        // backgroundColor: "red",
+        height: "100%",
         flexDirection: "row",
         flexWrap: "wrap",
         justifyContent: "space-between",
