@@ -19,6 +19,7 @@ import { TouchableOpacity } from "react-native";
 function CustomIntake(props) {
     const [intake, setIntake] = React.useState("0");
     const { unit, textColor } = React.useContext(AppContext);
+    const intakeRef = React.useRef(null);
     return (
         <View>
             <Heading color={textColor} size={"lg"}>
@@ -28,6 +29,7 @@ function CustomIntake(props) {
                 <Input
                     variant={"filled"}
                     backgroundColor={"primary.100"}
+                    ref={intakeRef}
                     keyboardType="number-pad"
                     type={"number"}
                     value={intake}
@@ -40,10 +42,12 @@ function CustomIntake(props) {
                     clearTextOnFocus={true}
                     borderRadius={10}
                     InputRightElement={
-                        <Text fontSize={"3xl"} color={"primary.600"}>
-                            {unit}
-                            {"   "}
-                        </Text>
+                        <Pressable onPress={() => intakeRef.current.focus()}>
+                            <Text fontSize={"3xl"} color={"primary.600"}>
+                                {unit}
+                                {"   "}
+                            </Text>
+                        </Pressable>
                     }
                 ></Input>
             </View>

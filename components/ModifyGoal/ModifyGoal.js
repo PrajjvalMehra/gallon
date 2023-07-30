@@ -20,6 +20,7 @@ function ModifyGoal(props) {
     const { goal, onClose } = props;
     const { unit, renderValue, textColor } = React.useContext(AppContext);
     const [localGoal, setLocalGoal] = React.useState(goal);
+    const refInput = React.useRef(null);
 
     const setDBGoal = async (goal) => {
         await modifyGoal(goal);
@@ -46,6 +47,7 @@ function ModifyGoal(props) {
             <View style={{ marginTop: 20, marginBottom: 10 }}>
                 <Input
                     variant={"filled"}
+                    ref={refInput}
                     backgroundColor={"primary.100"}
                     keyboardType="number-pad"
                     type={"number"}
@@ -59,10 +61,16 @@ function ModifyGoal(props) {
                     clearTextOnFocus={true}
                     borderRadius={10}
                     InputRightElement={
-                        <Text fontSize={"3xl"} color={"primary.600"}>
-                            {unit.toString()}
-                            {"   "}
-                        </Text>
+                        <Pressable
+                            onPress={() => {
+                                refInput.current.focus();
+                            }}
+                        >
+                            <Text fontSize={"3xl"} color={"primary.600"}>
+                                {unit.toString()}
+                                {"   "}
+                            </Text>
+                        </Pressable>
                     }
                 ></Input>
             </View>

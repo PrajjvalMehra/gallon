@@ -6,6 +6,7 @@ import {
     Input,
     KeyboardAvoidingView,
     Button,
+    Pressable,
 } from "native-base";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { modifyGoal } from "../../utils/asyncStorage";
@@ -17,6 +18,9 @@ function PersonalizedIntake(props) {
     const [weight, setWeight] = React.useState("");
     const [age, setAge] = React.useState("");
     const [gender, setGender] = React.useState("male");
+
+    const weightRef = React.useRef(null);
+    const ageRef = React.useRef(null);
 
     const setDBGoal = async (goal) => {
         await modifyGoal(goal);
@@ -78,6 +82,7 @@ function PersonalizedIntake(props) {
                     keyboardType="number-pad"
                     type={"number"}
                     size={"2xl"}
+                    ref={weightRef}
                     onChange={(e) => {
                         setWeight(e.nativeEvent.text);
                     }}
@@ -86,10 +91,16 @@ function PersonalizedIntake(props) {
                     clearTextOnFocus={true}
                     borderRadius={10}
                     InputRightElement={
-                        <Text fontSize={"xl"} color={"primary.600"}>
-                            Weight (in kg)
-                            {"   "}
-                        </Text>
+                        <Pressable
+                            onPress={() => {
+                                weightRef.current.focus();
+                            }}
+                        >
+                            <Text fontSize={"xl"} color={"primary.600"}>
+                                Weight (in kg)
+                                {"   "}
+                            </Text>
+                        </Pressable>
                     }
                 ></Input>
             </View>
@@ -100,6 +111,7 @@ function PersonalizedIntake(props) {
                     backgroundColor={"primary.100"}
                     keyboardType="number-pad"
                     type={"number"}
+                    ref={ageRef}
                     value={age}
                     size={"2xl"}
                     onChange={(e) => {
@@ -110,10 +122,12 @@ function PersonalizedIntake(props) {
                     clearTextOnFocus={true}
                     borderRadius={10}
                     InputRightElement={
-                        <Text fontSize={"xl"} color={"primary.600"}>
-                            Age
-                            {"   "}
-                        </Text>
+                        <Pressable onPress={() => ageRef.current.focus()}>
+                            <Text fontSize={"xl"} color={"primary.600"}>
+                                Age
+                                {"   "}
+                            </Text>
+                        </Pressable>
                     }
                 />
             </View>
