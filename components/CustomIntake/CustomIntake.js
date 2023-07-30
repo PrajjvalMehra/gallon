@@ -18,10 +18,12 @@ import { TouchableOpacity } from "react-native";
 
 function CustomIntake(props) {
     const [intake, setIntake] = React.useState("0");
-    const { unit } = React.useContext(AppContext);
+    const { unit, textColor } = React.useContext(AppContext);
     return (
         <View>
-            <Heading size={"lg"}>Custom Intake</Heading>
+            <Heading color={textColor} size={"lg"}>
+                Custom Intake
+            </Heading>
             <View style={{ marginTop: 20, marginBottom: 10 }}>
                 <Input
                     variant={"filled"}

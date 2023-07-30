@@ -1,4 +1,4 @@
-import React,{ useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
     Text,
     View,
@@ -9,33 +9,46 @@ import {
     Switch,
 } from "native-base";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import * as Notifications from 'expo-notifications';
-import { ToastContainer, toast } from 'react-toastify';
+import * as Notifications from "expo-notifications";
+import { ToastContainer, toast } from "react-toastify";
 import AppContext from "../../Context/AppContext";
 
 function DynamicNotification(props) {
-
     const { onClose } = props;
     const [notificationEnabled, setNotificationEnabled] = React.useState(false);
     const [schedule, setSchedule] = useState([]);
 
+    const { textColor, mainBgColor } = React.useContext(AppContext);
+
     const [notificationInterval, setNotificationInterval] = React.useState("");
 
-    const handleIntervalChange = text => setNotificationInterval(text);
+    const handleIntervalChange = (text) => setNotificationInterval(text);
 
     useEffect(() => {
         (async () => {
-
             const previouslyScheduled = await getSchedule();
             setSchedule(previouslyScheduled);
 
-
-            if (previouslyScheduled.find((item) => item.type === 'reminder')) {
+            if (previouslyScheduled.find((item) => item.type === "reminder")) {
                 setNotificationEnabled(true);
                 setNotificationInterval(async () => {
                     const now = new Date();
-                    const start = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 9, 0, 0);
-                    const end = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 17, 0, 0);
+                    const start = new Date(
+                        now.getFullYear(),
+                        now.getMonth(),
+                        now.getDate(),
+                        9,
+                        0,
+                        0
+                    );
+                    const end = new Date(
+                        now.getFullYear(),
+                        now.getMonth(),
+                        now.getDate(),
+                        17,
+                        0,
+                        0
+                    );
 
                     // Check if the current time is within the time period
                     if (now >= start && now <= end) {
@@ -44,40 +57,37 @@ function DynamicNotification(props) {
                 }, 15 * 60 * 1000);
             }
         })();
-
     }, []);
 
-
-
     const handleReminderPress = async () => {
-
         if (!notificationEnabled) {
             const scheduled = await scheduleReminder();
             if (scheduled) {
                 setNotificationEnabled(true);
                 setSchedule(await getSchedule());
             }
-        }
-        else {
+        } else {
             cancelReminder();
             setNotificationEnabled(false);
         }
 
-
-
         onClose();
     };
-    
+
     const handleGoalUpdate = async () => {
         Keyboard.dismiss();
         await setDBGoal(localGoal);
         onClose();
-      };
+    };
 
     return (
         <KeyboardAvoidingView behavior="padding" enabled>
-            <Heading size="lg">Set repeating notifications</Heading>
-            <Heading size="sm">Toggle this switch to turn repeating notifications ON/OFF</Heading>
+            <Heading size="lg" color={textColor}>
+                Set repeating notifications
+            </Heading>
+            <Heading size="sm" color={textColor}>
+                Toggle this switch to turn repeating notifications ON/OFF
+            </Heading>
 
             <View
                 style={{
@@ -87,7 +97,7 @@ function DynamicNotification(props) {
                     marginBottom: 20,
                 }}
             >
-                <Text fontSize="xl" marginRight={4}>
+                <Text color={textColor} fontSize="xl" marginRight={4}>
                     Notifications:
                 </Text>
                 <Switch
@@ -98,7 +108,7 @@ function DynamicNotification(props) {
             </View>
             {notificationEnabled && (
                 <View style={{ marginBottom: 20 }}>
-                    <Text fontSize="xl" marginBottom={2}>
+                    <Text color={textColor} fontSize="xl" marginBottom={2}>
                         Notification Interval (minutes):
                     </Text>
                     <Input
@@ -135,62 +145,56 @@ function DynamicNotification(props) {
             </Button>
         </KeyboardAvoidingView>
     );
-
 }
 
 export default DynamicNotification;
 
-
 async function scheduleReminder() {
-
     try {
         const permissions = await Notifications.getPermissionsAsync();
-        console.log('-Permissions:', permissions);
+        console.log("-Permissions:", permissions);
         if (!permissions.granted) {
             const request = await Notifications.requestPermissionsAsync({
                 ios: {
                     allowAlert: true,
                     allowSound: true,
-                    allowBadge: true
-                }
+                    allowBadge: true,
+                },
             });
             if (!request.granted) {
                 return false;
             }
         }
 
-
         // Schedule a notification.
         const id = await Notifications.scheduleNotificationAsync({
             content: {
-                title: 'Drink Water Reminder',
-                body: 'its time to drink water',
+                title: "Drink Water Reminder",
+                body: "its time to drink water",
                 sound: true,
                 priority: Notifications.AndroidAudioContentType.HIGH,
                 badge: 0,
                 data: {
-                    type: 'reminder'
-                }
+                    type: "reminder",
+                },
             },
-            trigger: null,// Trigger immediately
+            trigger: null, // Trigger immediately
         });
-        console.log('Notification ID:', id);
+        console.log("Notification ID:", id);
         if (!id) {
-            return false
+            return false;
         }
         return true;
+    } catch {
+        return false;
     }
-    catch {
-        return false
-    }
-
 }
 
 async function cancelReminder() {
     let cancelled = false;
     const schedule = await getSchedule();
     schedule.forEach(async (item) => {
-        if (item.type === 'reminder') {
+        if (item.type === "reminder") {
             await Notifications.cancelScheduledNotificationAsync(item.id);
             cancelled = true;
         }
@@ -198,12 +202,13 @@ async function cancelReminder() {
 }
 
 async function getSchedule() {
-    const scheduledNotifications = await Notifications.getAllScheduledNotificationsAsync();
+    const scheduledNotifications =
+        await Notifications.getAllScheduledNotificationsAsync();
     const schedule = [];
     scheduledNotifications.forEach((scheduledNotification) => {
         schedule.push({
             id: scheduledNotification.identifier,
-            type: scheduledNotification.content.data.type
+            type: scheduledNotification.content.data.type,
         });
     });
     return schedule;
