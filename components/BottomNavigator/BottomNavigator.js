@@ -26,6 +26,7 @@ function BottomNavigator() {
                         headerStyle: {
                             backgroundColor: bg,
                         },
+                        lazy: false,
 
                         headerTintColor: textColor,
                         tabBarStyle: {
