@@ -66,7 +66,7 @@ function DynamicNotification(props) {
                         body: "Log your intake",
                     },
                     trigger: {
-                        seconds: (interval === "" ? 60 : interval) * 60,
+                        seconds: interval === "" ? 60 : interval,
                         repeats: true,
                     },
                 });
