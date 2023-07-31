@@ -90,10 +90,11 @@ function Home() {
             if (onboarding === "false") {
                 setFirstLaunch(true);
                 await setOnboardung();
-                setActionElement(
-                    <PersonalizedIntake goal={goal} onClose={onClose} />
-                );
-                onOpen();
+                //PersonalizedIntake Popup
+                // setActionElement(
+                //     <PersonalizedIntake goal={goal} onClose={onClose} />
+                // );
+                // onOpen();
             } else {
                 setFirstLaunch(false);
             }
