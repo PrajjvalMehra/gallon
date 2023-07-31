@@ -18,7 +18,7 @@ import { TouchableOpacity } from "react-native";
 
 function CustomIntake(props) {
     const [intake, setIntake] = React.useState("0");
-    const { unit, textColor } = React.useContext(AppContext);
+    const { unit, textColor, colorMode } = React.useContext(AppContext);
     const intakeRef = React.useRef(null);
     return (
         <View>

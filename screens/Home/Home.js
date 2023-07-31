@@ -109,12 +109,12 @@ function Home() {
         }
         async function fetchProgress() {
             const progress = await fetchIntake();
-            setProgress(progress);
+            setProgress(parseInt(progress));
         }
         fetchOnboardingData();
         fetchProgress();
-        fetchGoal();
         progressCircle();
+        fetchGoal();
         fetchUnit();
         setLoading(false);
     }, [progress, appState, isOpen, isFocus]);
@@ -122,7 +122,7 @@ function Home() {
     const progressCircle = () => {
         const fill = Math.ceil((progress * 100) / goal);
         // if (fill / 100 > 0) return;
-        setFill(fill);
+        if (fill !== Infinity) setFill(fill);
     };
     const increaseProgress = async (value) => {
         const toInt = parseInt(value);
@@ -163,7 +163,7 @@ function Home() {
                                 }}
                                 size={260}
                                 width={30}
-                                fill={fill}
+                                fill={parseInt(fill)}
                                 tintColor="#a5f3fc"
                                 lineCap="round"
                                 animate={(fill) => {}}
@@ -292,9 +292,7 @@ function Home() {
                             bottom={bottomInset}
                             style={{
                                 backgroundColor:
-                                    colorMode === "light"
-                                        ? "white"
-                                        : "primary.900",
+                                    colorMode === "light" ? "white" : "#164e63",
                             }}
                         >
                             <View width={"100%"} padding={2}>
