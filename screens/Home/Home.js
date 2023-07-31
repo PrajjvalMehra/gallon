@@ -121,7 +121,7 @@ function Home() {
 
     const progressCircle = () => {
         const fill = Math.ceil((progress * 100) / goal);
-        // if (fill / 100 > 0) return;
+        if (fill > 100) return setFill(100);
         if (fill !== Infinity) setFill(fill);
     };
     const increaseProgress = async (value) => {
