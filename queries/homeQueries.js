@@ -9,7 +9,6 @@ const fetchIntake = async () => {
     if (userData === null) return 0;
     const parsedData = JSON.parse(userData);
     const todayData = parsedData.find((item) => item.date === date);
-    console.log(todayData);
     if (todayData === undefined) return 0;
     return todayData.intake;
 
@@ -42,7 +41,6 @@ const increaseIntake = async (value) => {
     if (todayData === undefined) return 0;
     todayData.intake += value;
     await AsyncStorage.setItem("userData", JSON.stringify(parsedData));
-    console.log("todayData", todayData);
 
     return;
     const unit = await AsyncStorage.getItem("unit");

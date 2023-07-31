@@ -124,8 +124,6 @@ function Settings() {
         );
     };
 
-    console.log(colorMode);
-
     const resetHistory = () => {
         Alert.alert(
             "Reset History Logs",

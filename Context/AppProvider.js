@@ -16,7 +16,6 @@ function AppProvider({ children }) {
     React.useEffect(() => {
         const getTheme = async () => {
             const theme = await AsyncStorage.getItem("theme");
-            console.log("theme", theme);
             if (theme !== null) {
                 setColorMode(theme);
             } else {
@@ -36,7 +35,6 @@ function AppProvider({ children }) {
     }, []);
 
     React.useEffect(() => {
-        console.log("appState", appState);
         AppState.addEventListener("change", (state) => {
             setAppState(state);
         });

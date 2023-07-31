@@ -22,6 +22,7 @@ function BottomNavigator() {
         <NativeBaseProvider>
             <NavigationContainer independent={true}>
                 <Tab.Navigator
+                    initialRouteName="Home"
                     screenOptions={{
                         headerStyle: {
                             backgroundColor: bg,
