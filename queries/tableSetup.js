@@ -72,6 +72,7 @@ const testQuery2 = async () => {
 };
 
 //clear history logs, by dropping table
+// old code
 // const dropTable = async () => {
 //     await db.transaction((tx) => {
 //         tx.executeSql("Drop Table IF EXISTS Data");
@@ -83,8 +84,9 @@ const testQuery2 = async () => {
 // };
 
 const dropTable = async () => {
-  const result = await AsyncStorage.setItem("userData", "");
-  return JSON.parse(result);
+  AsyncStorage.setItem("userData", "");
+  dbSetup();
+  createTodayRow();
 };
 
 const executeQuery = (sql, params) => {

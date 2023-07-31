@@ -54,7 +54,6 @@ function Visual() {
     },
   };
   const [logs, setLogs] = React.useState([]);
-  const [logs5days, setLogs5days] = React.useState([]);
   const [goal, setGoal] = React.useState(0);
   const { appState, renderValue, unit, textColor, mainBgColor } =
     React.useContext(AppContext);
@@ -80,11 +79,11 @@ function Visual() {
   const data = {
     labels: logs.map(
       (item, key) =>
-        key > 5 && item.date.split(" ")[1] + item.date.split(" ")[2]
+        key < 15 && item.date.split(" ")[1] + item.date.split(" ")[2]
     ),
     datasets: [
       {
-        data: logs.map((item, key) => key > 5 && item.intake),
+        data: logs.map((item, key) => key < 15 && item.intake),
         color: (opacity = 1) => `rgba(103, 232, 249, ${opacity})`, // optional
         strokeWidth: 2, // optional
       },
@@ -94,9 +93,9 @@ function Visual() {
   const data2 = {
     labels: logs.map(
       (item, key) =>
-        key > 5 && item.date.split(" ")[1] + item.date.split(" ")[2]
+        key < 5 && item.date.split(" ")[1] + item.date.split(" ")[2]
     ), // optional
-    datasets: [{ data: logs.map((item, key) => key > 5 && item.intake) }],
+    datasets: [{ data: logs.map((item, key) => key < 5 && item.intake) }],
   };
 
   function graph15Days() {
@@ -131,7 +130,7 @@ function Visual() {
   }
 
   return (
-    <ScrollView style={{ backgroundColor: mainBgColor, height: "100%" }}>
+    <ScrollView style={{ backgroundColor: mainBgColor, height: "90%" }}>
       <Text
         color={textColor}
         style={{
