@@ -1,79 +1,61 @@
 import React, { useState, useEffect } from "react";
 import {
-    Text,
-    View,
-    Heading,
-    Input,
-    KeyboardAvoidingView,
-    Button,
-    Switch,
+  Text,
+  View,
+  Heading,
+  Input,
+  KeyboardAvoidingView,
+  Button,
+  Switch,
+  Alert,
+  Keyboard, 
 } from "native-base";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import * as Notifications from "expo-notifications";
-import { ToastContainer, toast } from "react-toastify";
+
 import AppContext from "../../Context/AppContext";
 
 function DynamicNotification(props) {
-    const { onClose } = props;
-    const [notificationEnabled, setNotificationEnabled] = React.useState(false);
-    const [schedule, setSchedule] = useState([]);
+  const { onClose } = props;
+  const [notificationEnabled, setNotificationEnabled] = React.useState(false);
+  const [schedule, setSchedule] = useState([]);
 
-    const { textColor, mainBgColor } = React.useContext(AppContext);
+  const { textColor, mainBgColor } = React.useContext(AppContext);
 
-    const [notificationInterval, setNotificationInterval] = React.useState("");
+  const [notificationInterval, setNotificationInterval] = React.useState("");
 
-    const handleIntervalChange = (text) => setNotificationInterval(text);
+  const handleIntervalChange = (text) => setNotificationInterval(text);
 
-    useEffect(() => {
-        (async () => {
-            const previouslyScheduled = await getSchedule();
-            setSchedule(previouslyScheduled);
+  useEffect(() => {
+    (async () => {
+      const previouslyScheduled = await getSchedule();
+      setSchedule(previouslyScheduled);
 
-            if (previouslyScheduled.find((item) => item.type === "reminder")) {
-                setNotificationEnabled(true);
-                setNotificationInterval(async () => {
-                    const now = new Date();
-                    const start = new Date(
-                        now.getFullYear(),
-                        now.getMonth(),
-                        now.getDate(),
-                        9,
-                        0,
-                        0
-                    );
-                    const end = new Date(
-                        now.getFullYear(),
-                        now.getMonth(),
-                        now.getDate(),
-                        17,
-                        0,
-                        0
-                    );
+      if (previouslyScheduled.find((item) => item.type === "reminder")) {
+        setNotificationEnabled(true);
+        setNotificationInterval(handleIntervalChange); 
+      }
+    })();
+  }, []);
 
-                    // Check if the current time is within the time period
-                    if (now >= start && now <= end) {
-                        await scheduleReminder();
-                    }
-                }, 15 * 60 * 1000);
-            }
-        })();
-    }, []);
+  const handleReminderPress = async () => {
+    if (!notificationEnabled) {
+      const scheduled = await scheduleReminder();
+      if (scheduled) {
+        console.log("Schedule found");
+        setNotificationEnabled(true);
+        setSchedule(await getSchedule());
+      } else {
+        // Show a toast or alert indicating an error
+        Alert.alert("Error", "Failed to schedule notification.");
+      }
+    } else {
+      cancelReminder();
+      setNotificationEnabled(false);
+    }
 
-    const handleReminderPress = async () => {
-        if (!notificationEnabled) {
-            const scheduled = await scheduleReminder();
-            if (scheduled) {
-                setNotificationEnabled(true);
-                setSchedule(await getSchedule());
-            }
-        } else {
-            cancelReminder();
-            setNotificationEnabled(false);
-        }
-
-        onClose();
-    };
-
+    onClose();
+  };
     const handleGoalUpdate = async () => {
         Keyboard.dismiss();
         await setDBGoal(localGoal);
@@ -101,30 +83,28 @@ function DynamicNotification(props) {
                     Notifications:
                 </Text>
                 <Switch
-                    isChecked={notificationEnabled}
-                    onToggle={handleReminderPress}
+                    isChecked={!notificationEnabled}
+                    onToggle={setNotificationEnabled}
                     size="lg"
                 />
             </View>
-            {notificationEnabled && (
-                <View style={{ marginBottom: 20 }}>
-                    <Text color={textColor} fontSize="xl" marginBottom={2}>
-                        Notification Interval (minutes):
-                    </Text>
-                    <Input
-                        variant="filled"
-                        backgroundColor="primary.100"
-                        keyboardType="number-pad"
-                        type="number"
-                        value={notificationInterval}
-                        size="lg"
-                        onChangeText={handleIntervalChange}
-                        color="primary.600"
-                        fontSize="lg"
-                        borderRadius={10}
-                    />
-                </View>
-            )}
+            <View style={{ marginBottom: 20 }}>
+                <Text color={textColor} fontSize="xl" marginBottom={2}>
+                    Notification Interval (minutes):
+                </Text>
+                <Input
+                    variant="filled"
+                    backgroundColor="primary.100"
+                    keyboardType="number-pad"
+                    type="number"
+                    value={notificationInterval}
+                    size="lg"
+                    onChangeText={handleIntervalChange}
+                    color="primary.600"
+                    fontSize="lg"
+                    borderRadius={10}
+                />
+            </View>
             <Button
                 bgColor="primary.400"
                 _text={{ color: "black" }}
