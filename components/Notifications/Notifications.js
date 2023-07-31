@@ -51,8 +51,10 @@ function DynamicNotification(props) {
         }
     };
 
-    const subscribeToNotifications = (interval) => {
+    const subscribeToNotifications = async (interval) => {
         console.log("interval", interval);
+        await Notifications.cancelAllScheduledNotificationsAsync();
+        setNotificationEnabled(false);
         registerForPushNotificationsAsync()
             .then((token) => {
                 setExpoPushToken(token);
@@ -66,7 +68,7 @@ function DynamicNotification(props) {
                         body: "Log your intake",
                     },
                     trigger: {
-                        seconds: interval === "" ? 60 : interval,
+                        seconds: (interval === "" ? 60 : interval) * 60,
                         repeats: true,
                     },
                 });
