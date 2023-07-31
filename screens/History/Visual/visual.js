@@ -77,13 +77,14 @@ function Visual() {
     );
 
     const data = {
-        labels: logs.map(
-            (item, key) =>
-                key < 15 && item.date.split(" ")[1] + item.date.split(" ")[2]
-        ),
+        labels: logs
+            .slice(0, 15)
+            .map(
+                (item, key) => item.date.split(" ")[1] + item.date.split(" ")[2]
+            ),
         datasets: [
             {
-                data: logs.map((item, key) => key < 15 && item.intake),
+                data: logs.slice(0, 15).map((item, key) => item.intake),
                 color: (opacity = 1) => `rgba(103, 232, 249, ${opacity})`, // optional
                 strokeWidth: 2, // optional
             },
@@ -91,13 +92,13 @@ function Visual() {
     };
 
     const data2 = {
-        labels: logs.map(
-            (item, key) =>
-                key < 5 && item.date.split(" ")[1] + item.date.split(" ")[2]
-        ), // optional
-        datasets: [{ data: logs.map((item, key) => key < 5 && item.intake) }],
+        labels: logs
+            .slice(0, 5)
+            .map(
+                (item, key) => item.date.split(" ")[1] + item.date.split(" ")[2]
+            ), // optional
+        datasets: [{ data: logs.slice(0, 5).map((item, key) => item.intake) }],
     };
-
     function graph15Days() {
         return (
             <Center style={{ paddingRight: 10, paddingLeft: 10 }}>
