@@ -1,65 +1,83 @@
 import React, { useState, useEffect } from "react";
 import {
-  Text,
-  View,
-  Heading,
-  Input,
-  KeyboardAvoidingView,
-  Button,
-  Switch,
-  Alert,
-  Keyboard, 
+    Text,
+    View,
+    Heading,
+    Input,
+    KeyboardAvoidingView,
+    Button,
+    Switch,
+    Keyboard,
+    Pressable,
 } from "native-base";
+import { Alert } from "react-native";
+import { useIsFocused } from "@react-navigation/native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import * as Notifications from "expo-notifications";
+import { getPermissionsAsync } from "expo-notifications";
+import * as Permissions from "expo-permissions";
 
 import AppContext from "../../Context/AppContext";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { parse } from "expo-linking";
 
 function DynamicNotification(props) {
-  const { onClose } = props;
-  const [notificationEnabled, setNotificationEnabled] = React.useState(false);
-  const [schedule, setSchedule] = useState([]);
+    const { onClose } = props;
+    const [notificationEnabled, setNotificationEnabled] = React.useState(false);
+    const [expoPushToken, setExpoPushToken] = useState("");
+    const [notificationInterval, setNotificationInterval] = React.useState(60);
+    const notificationListener = React.useRef();
+    const responseListener = React.useRef();
+    const [schedule, setSchedule] = useState([]);
 
-  const { textColor, mainBgColor } = React.useContext(AppContext);
+    const { textColor, mainBgColor } = React.useContext(AppContext);
+    const refInput = React.useRef(null);
 
-  const [notificationInterval, setNotificationInterval] = React.useState("");
+    React.useEffect(() => {
+        checkInterval();
+    }, []);
 
-  const handleIntervalChange = (text) => setNotificationInterval(text);
+    const checkInterval = async () => {
+        console.log("checking interval");
+        const data = await Notifications.getAllScheduledNotificationsAsync();
+        if (data.length === 0) {
+            setNotificationInterval(60);
+            setNotificationEnabled(false);
+            refInput.current.value = "60";
+        } else {
+            setNotificationEnabled(true);
+            setNotificationInterval(data[0].trigger.seconds);
+            refInput.current.value = data[0].trigger.seconds.toString();
+        }
+    };
 
-  useEffect(() => {
-    (async () => {
-      const previouslyScheduled = await getSchedule();
-      setSchedule(previouslyScheduled);
-
-      if (previouslyScheduled.find((item) => item.type === "reminder")) {
-        setNotificationEnabled(true);
-        setNotificationInterval(handleIntervalChange); 
-      }
-    })();
-  }, []);
-
-  const handleReminderPress = async () => {
-    if (!notificationEnabled) {
-      const scheduled = await scheduleReminder();
-      if (scheduled) {
-        console.log("Schedule found");
-        setNotificationEnabled(true);
-        setSchedule(await getSchedule());
-      } else {
-        // Show a toast or alert indicating an error
-        Alert.alert("Error", "Failed to schedule notification.");
-      }
-    } else {
-      cancelReminder();
-      setNotificationEnabled(false);
-    }
-
-    onClose();
-  };
-    const handleGoalUpdate = async () => {
-        Keyboard.dismiss();
-        await setDBGoal(localGoal);
-        onClose();
+    const subscribeToNotifications = (interval) => {
+        console.log("interval", interval);
+        registerForPushNotificationsAsync()
+            .then((token) => {
+                setExpoPushToken(token);
+                console.log("token", token);
+                if (token === undefined) {
+                    setNotificationEnabled(false);
+                }
+                Notifications.scheduleNotificationAsync({
+                    content: {
+                        title: "Time to take a break and hydrate!",
+                        body: "Log your intake",
+                    },
+                    trigger: {
+                        seconds: (interval === "" ? 60 : interval) * 60,
+                        repeats: true,
+                    },
+                });
+                Alert.alert(
+                    "Notifications Enabled",
+                    `You will receive alerts every ${interval} minutes`
+                );
+            })
+            .catch((err) => {
+                console.log(err);
+            });
     };
 
     return (
@@ -68,7 +86,7 @@ function DynamicNotification(props) {
                 Set repeating notifications
             </Heading>
             <Heading size="sm" color={textColor}>
-                Toggle this switch to turn repeating notifications ON/OFF
+                Modify the interval between hydration reminders
             </Heading>
 
             <View
@@ -78,31 +96,38 @@ function DynamicNotification(props) {
                     marginTop: 20,
                     marginBottom: 20,
                 }}
-            >
-                <Text color={textColor} fontSize="xl" marginRight={4}>
-                    Notifications:
-                </Text>
-                <Switch
-                    isChecked={!notificationEnabled}
-                    onToggle={setNotificationEnabled}
-                    size="lg"
-                />
-            </View>
-            <View style={{ marginBottom: 20 }}>
-                <Text color={textColor} fontSize="xl" marginBottom={2}>
-                    Notification Interval (minutes):
-                </Text>
+            ></View>
+            <View style={{ marginBottom: 10 }}>
                 <Input
                     variant="filled"
                     backgroundColor="primary.100"
                     keyboardType="number-pad"
                     type="number"
-                    value={notificationInterval}
-                    size="lg"
-                    onChangeText={handleIntervalChange}
+                    placeholder="60"
+                    size="2xl"
+                    value={notificationInterval.toString()}
+                    onChange={(e) => {
+                        if (e.nativeEvent.text === "") {
+                            setNotificationInterval("");
+                            return;
+                        }
+                        setNotificationInterval(parseInt(e.nativeEvent.text));
+                    }}
+                    ref={refInput}
                     color="primary.600"
-                    fontSize="lg"
+                    fontSize="2xl"
                     borderRadius={10}
+                    InputRightElement={
+                        <Pressable
+                            onPress={() => {
+                                refInput.current.focus();
+                            }}
+                        >
+                            <Text fontSize={"2xl"} color={"primary.600"}>
+                                minutes{"  "}
+                            </Text>
+                        </Pressable>
+                    }
                 />
             </View>
             <Button
@@ -119,9 +144,73 @@ function DynamicNotification(props) {
                 }
                 size="lg"
                 borderRadius={10}
-                onPress={handleReminderPress}
+                onPress={() => {
+                    Alert.alert(
+                        "Enable Notifications",
+                        `This will enable alerts every ${
+                            notificationInterval === ""
+                                ? "60"
+                                : notificationInterval
+                        } minutes`,
+                        [
+                            {
+                                text: "Cancel",
+                                onPress: () => console.log("Cancel Pressed"),
+                                style: "destructive",
+                            },
+                            {
+                                text: "Yes",
+                                onPress: () => {
+                                    setNotificationEnabled(true);
+                                    subscribeToNotifications(
+                                        notificationInterval
+                                    );
+                                },
+                            },
+                        ]
+                    );
+                }}
             >
-                Save configuration
+                Enable Alerts
+            </Button>
+            <Button
+                style={{ marginTop: 20 }}
+                bgColor={notificationEnabled ? "danger.500" : "danger.200"}
+                _text={{ color: "black" }}
+                _pressed={{ bg: "danger.400" }}
+                disabled={!notificationEnabled}
+                variant="subtle"
+                onPress={async () => {
+                    Alert.alert(
+                        "Are you sure?",
+                        "This will disable all notifications",
+                        [
+                            {
+                                text: "Cancel",
+                                onPress: () => console.log("Cancel Pressed"),
+                                style: "destructive",
+                            },
+                            {
+                                text: "Yes",
+                                onPress: async () => {
+                                    await Notifications.cancelAllScheduledNotificationsAsync();
+                                    setNotificationEnabled(false);
+                                },
+                            },
+                        ]
+                    );
+                }}
+                endIcon={
+                    <MaterialCommunityIcons
+                        name="water-minus-outline"
+                        size={24}
+                        color="black"
+                    />
+                }
+                size="lg"
+                borderRadius={10}
+            >
+                Disable Alerts
             </Button>
         </KeyboardAvoidingView>
     );
@@ -129,67 +218,66 @@ function DynamicNotification(props) {
 
 export default DynamicNotification;
 
-async function scheduleReminder() {
-    try {
-        const permissions = await Notifications.getPermissionsAsync();
-        console.log("-Permissions:", permissions);
-        if (!permissions.granted) {
-            const request = await Notifications.requestPermissionsAsync({
-                ios: {
-                    allowAlert: true,
-                    allowSound: true,
-                    allowBadge: true,
-                },
-            });
-            if (!request.granted) {
-                return false;
-            }
-        }
+async function schedulePushNotification(time, day) {
+    time = new Date(time.getTime() - 5 * 60000);
+    var days = [
+        "Sunday",
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+    ];
+    const weekday = days.indexOf(day) + 1;
+    const hours = time.getHours();
+    const minutes = time.getMinutes();
+    const id = await Notifications.scheduleNotificationAsync({
+        content: {
+            title: "hello",
+            body: "gallon",
+            // sound: 'default',
+        },
+        trigger: {
+            weekday: weekday,
+            hour: hours,
+            minute: minutes,
+            repeats: true,
+        },
+    });
+    console.log("notif id on scheduling", id);
+    return id;
+}
 
-        // Schedule a notification.
-        const id = await Notifications.scheduleNotificationAsync({
-            content: {
-                title: "Drink Water Reminder",
-                body: "its time to drink water",
-                sound: true,
-                priority: Notifications.AndroidAudioContentType.HIGH,
-                badge: 0,
-                data: {
-                    type: "reminder",
-                },
-            },
-            trigger: null, // Trigger immediately
-        });
-        console.log("Notification ID:", id);
-        if (!id) {
-            return false;
-        }
-        return true;
-    } catch {
-        return false;
+async function registerForPushNotificationsAsync() {
+    let token;
+
+    const { status: existingStatus } =
+        await Notifications.getPermissionsAsync();
+    let finalStatus = existingStatus;
+    if (existingStatus !== "granted") {
+        const { status } = await Notifications.requestPermissionsAsync();
+        finalStatus = status;
     }
-}
+    if (finalStatus !== "granted") {
+        alert("Failed to get push token for push notification!");
+        return;
+    }
+    token = (await Notifications.getExpoPushTokenAsync()).data;
+    console.log(token);
 
-async function cancelReminder() {
-    let cancelled = false;
-    const schedule = await getSchedule();
-    schedule.forEach(async (item) => {
-        if (item.type === "reminder") {
-            await Notifications.cancelScheduledNotificationAsync(item.id);
-            cancelled = true;
-        }
-    });
-}
-
-async function getSchedule() {
-    const scheduledNotifications =
-        await Notifications.getAllScheduledNotificationsAsync();
-    const schedule = [];
-    scheduledNotifications.forEach((scheduledNotification) => {
-        schedule.push({
-            id: scheduledNotification.identifier,
-            type: scheduledNotification.content.data.type,
+    if (Platform.OS === "android") {
+        Notifications.setNotificationChannelAsync("default", {
+            name: "default",
+            importance: Notifications.AndroidImportance.MAX,
+            vibrationPattern: [0, 250, 250, 250],
+            sound: true,
+            lightColor: "#FF231F7C",
+            lockscreenVisibility:
+                Notifications.AndroidNotificationVisibility.PUBLIC,
+            bypassDnd: true,
         });
-    });
-    return schedule;
+    }
+
+    return token;
 }
