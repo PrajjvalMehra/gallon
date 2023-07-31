@@ -20,6 +20,7 @@ import PersonalizedIntake from "../../components/PersonalizedIntake/Personalized
 import Notifications from "../../components/Notifications/Notifications";
 import { getGoal } from "../../utils/asyncStorage";
 import { dropTable } from "../../queries/tableSetup";
+import { PixelRatio } from "react-native";
 
 const useKeyboardBottomInset = () => {
     const [bottom, setBottom] = React.useState(0);
@@ -63,6 +64,8 @@ function Settings() {
         colorMode,
         mainBgColor,
     } = React.useContext(AppContext);
+    const fontScale = PixelRatio.getFontScale();
+    const getFontSize = (size) => size / fontScale;
 
     const { showActionSheetWithOptions } = useActionSheet();
 
@@ -224,17 +227,23 @@ function Settings() {
                     marginBottom={2}
                     _pressed={{ opacity: 0.5 }}
                 >
-                    <Text color={textColor} style={styles.modifyGoalText}>
+                    <Text
+                        color={textColor}
+                        style={[
+                            styles.modifyGoalText,
+                            { fontSize: getFontSize(20) },
+                        ]}
+                    >
                         Alerts{"              "}
                         <Pressable>
                             <Feather
                                 color={puckIconColor}
                                 name="edit"
-                                size={20}
+                                size={getFontSize(20)}
                             />
                         </Pressable>
                     </Text>
-                    <Text color={textColor} fontSize={"lg"}>
+                    <Text color={textColor} fontSize={getFontSize(20)}>
                         Notifications
                     </Text>
                 </Button>
@@ -258,17 +267,23 @@ function Settings() {
                     marginBottom={2}
                     _pressed={{ opacity: 0.5 }}
                 >
-                    <Text color={textColor} style={styles.modifyGoalText}>
+                    <Text
+                        color={textColor}
+                        style={{
+                            fontSize: getFontSize(20),
+                            fontWeight: "bold",
+                        }}
+                    >
                         Daily Goal{"      "}
                         <Pressable>
                             <Feather
                                 color={puckIconColor}
                                 name="edit"
-                                size={20}
+                                size={getFontSize(20)}
                             />
                         </Pressable>
                     </Text>
-                    <Text color={textColor} fontSize={"lg"}>
+                    <Text color={textColor} fontSize={getFontSize(20)}>
                         {renderValue(goal)} {unit}
                     </Text>
                 </Button>
@@ -293,17 +308,23 @@ function Settings() {
                     marginBottom={2}
                     _pressed={{ opacity: 0.5 }}
                 >
-                    <Text color={textColor} style={styles.modifyGoalText}>
+                    <Text
+                        color={textColor}
+                        style={[
+                            styles.modifyGoalText,
+                            { fontSize: getFontSize(20) },
+                        ]}
+                    >
                         User Info{"        "}
                         <Pressable>
                             <Feather
                                 color={puckIconColor}
                                 name="edit"
-                                size={20}
+                                size={getFontSize(20)}
                             />
                         </Pressable>
                     </Text>
-                    <Text color={textColor} fontSize={"lg"}>
+                    <Text color={textColor} fontSize={getFontSize(18)}>
                         Suggested Intake
                     </Text>
                 </Button>
@@ -325,17 +346,23 @@ function Settings() {
                     marginBottom={2}
                     _pressed={{ opacity: 0.5 }}
                 >
-                    <Text color={textColor} style={styles.modifyGoalText}>
+                    <Text
+                        color={textColor}
+                        style={[
+                            styles.modifyGoalText,
+                            { fontSize: getFontSize(20) },
+                        ]}
+                    >
                         Unit{"                  "}
                         <Pressable>
                             <Feather
                                 color={puckIconColor}
                                 name="edit"
-                                size={20}
+                                size={getFontSize(20)}
                             />
                         </Pressable>
                     </Text>
-                    <Text color={textColor} fontSize={"lg"}>
+                    <Text color={textColor} fontSize={getFontSize(19)}>
                         {unit}
                     </Text>
                 </Button>
