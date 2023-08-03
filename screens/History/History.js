@@ -1,4 +1,4 @@
-import { Text, View, ScrollView } from "native-base";
+import { Text, View, ScrollView, VStack } from "native-base";
 import React from "react";
 import { SafeAreaView } from "react-native";
 import Logs from "./Logs/logs";
@@ -17,7 +17,7 @@ function History() {
 
     const [value, setValue] = React.useState(true);
 
-    const { mainBgColor, colorMode } = React.useContext(AppContext);
+    const { mainBgColor, colorMode, textColor } = React.useContext(AppContext);
 
     return (
         <SafeAreaView>
@@ -41,7 +41,19 @@ function History() {
                     backgroundColor: mainBgColor,
                 }}
             />
-            {value ? <Logs /> : <Visual />}
+            {value ? (
+                <Logs />
+            ) : (
+                <View
+                    style={{
+                        paddingTop: 20,
+                        height: "100%",
+                        backgroundColor: mainBgColor,
+                    }}
+                >
+                    <Visual />
+                </View>
+            )}
         </SafeAreaView>
     );
 }

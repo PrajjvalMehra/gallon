@@ -25,149 +25,101 @@ import AppContext from "../../../Context/AppContext";
 import { LineChart, BarChart } from "react-native-chart-kit";
 import { Dimensions } from "react-native";
 
-function Visual() {
-    const screenWidth = Dimensions.get("window").width;
-    const chartConfig = {
-        backgroundGradientFrom: "#164e63",
-        backgroundGradientFromOpacity: 1,
-        backgroundGradientTo: "#164e63",
-        backgroundGradientToOpacity: 1,
-        color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-        strokeWidth: 2, // optional, default 3
-        barPercentage: 0.5,
-        useShadowColorFromDataset: false, // optional
-        propsForLabels: {
-            fontSize: 8,
-        },
-    };
-    const chartConfig2 = {
-        backgroundGradientFrom: "#164e63",
-        backgroundGradientFromOpacity: 1,
-        backgroundGradientTo: "#164e63",
-        backgroundGradientToOpacity: 1,
-        color: (opacity = 1) => `rgba(240, 249, 255, ${opacity})`,
-        strokeWidth: 2, // optional, default 3
-        barPercentage: 0.5,
-        useShadowColorFromDataset: false, // optional
-        propsForLabels: {
-            fontSize: 8,
-        },
-    };
-    const [logs, setLogs] = React.useState([]);
-    const [goal, setGoal] = React.useState(0);
-    const { appState, renderValue, unit, textColor, mainBgColor } =
+const Visual = () => {
+    const [linedata, setLinedata] = React.useState([]);
+    const [lineLabels, setLineLabels] = React.useState([]);
+    const [weeklyAverage, setWeeklyAverage] = React.useState(0);
+    const { unit, colorMode, textColor, alternateTextColor, renderValue } =
         React.useContext(AppContext);
-    const isFocused = useIsFocused();
 
-    useEffect(
-        () => {
-            async function fetchLogs() {
-                const data = await graphData();
-                setLogs(data);
-            }
-            async function fetchGoal() {
-                const data = await getGoal();
-                setGoal(data);
-            }
-            fetchGoal();
-            fetchLogs();
-        },
-        [isFocused],
-        appState
-    );
-
-    const data = {
-        labels: logs
-            .slice(0, 15)
-            .map(
-                (item, key) => item.date.split(" ")[1] + item.date.split(" ")[2]
-            ),
-        datasets: [
-            {
-                data: logs.slice(0, 15).map((item, key) => item.intake),
-                color: (opacity = 1) => `rgba(103, 232, 249, ${opacity})`, // optional
-                strokeWidth: 2, // optional
-            },
-        ],
-    };
-
-    const data2 = {
-        labels: logs
-            .slice(0, 5)
-            .map(
-                (item, key) => item.date.split(" ")[1] + item.date.split(" ")[2]
-            ), // optional
-        datasets: [{ data: logs.slice(0, 5).map((item, key) => item.intake) }],
-    };
-    function graph15Days() {
-        return (
-            <Center style={{ paddingRight: 10, paddingLeft: 10 }}>
-                <LineChart
-                    data={data}
-                    yAxisSuffix={"ml"}
-                    width={screenWidth - 20}
-                    style={{ borderRadius: 16 }}
-                    height={260}
-                    chartConfig={chartConfig}
-                />
-            </Center>
-        );
-    }
-
-    function graph5Days() {
-        return (
-            <Center style={{ paddingRight: 10, paddingLeft: 10 }}>
-                <BarChart
-                    data={data2}
-                    width={screenWidth - 20}
-                    style={{ borderRadius: 16 }}
-                    height={230}
-                    yAxisSuffix="ml"
-                    chartConfig={chartConfig}
-                    verticalLabelRotation={30}
-                />
-            </Center>
-        );
-    }
+    React.useEffect(() => {
+        async function fetchData() {
+            const data = await graphData();
+            console.log(data);
+            const intake = data.map((item) =>
+                parseInt(renderValue(item.intake))
+            );
+            const date = data.map((item) => item.date.slice(3, 10));
+            let totalWeeklyIntake = 0;
+            intake.forEach((item) => {
+                totalWeeklyIntake += item;
+            });
+            console.log(totalWeeklyIntake);
+            console.log(intake.length);
+            setWeeklyAverage(
+                totalWeeklyIntake / (intake.length > 6 ? 7 : intake.length)
+            );
+            setLineLabels(date);
+            setLinedata(intake);
+        }
+        fetchData();
+    }, []);
 
     return (
-        <ScrollView style={{ backgroundColor: mainBgColor, height: "100%" }}>
-            <Text
-                color={textColor}
-                style={{
-                    textAlign: "center",
-                    paddingTop: 20,
-                    fontSize: 16,
-                }}
-            >
-                5 Days water intake logs
-            </Text>
-            {data2.labels.length > 0 ? (
-                graph5Days()
-            ) : (
-                <Text>No record to show</Text>
-            )}
+        <VStack>
+            <View>
+                <Text fontSize={"md"} color={textColor}>
+                    Weekly Average{" "}
+                </Text>
+                <Heading color={alternateTextColor} size={"md"}>
+                    {weeklyAverage.toFixed(1)}{" "}
+                    <Text fontSize={"md"} color={textColor}>
+                        {unit}
+                    </Text>
+                </Heading>
+            </View>
 
-            <Text
-                color={textColor}
-                style={{
-                    textAlign: "center",
-                    paddingTop: 20,
-                    fontSize: 16,
-                }}
-            >
-                15 Days water intake logs
-            </Text>
-
-            {data.labels.length > 0 ? (
-                graph15Days()
-            ) : (
-                <Text>No record to show</Text>
-            )}
-        </ScrollView>
+            <View>
+                <LineChart
+                    style={{
+                        marginVertical: 8,
+                    }}
+                    data={{
+                        labels: lineLabels,
+                        datasets: [
+                            {
+                                data: linedata,
+                            },
+                        ],
+                    }}
+                    fromZero={true}
+                    width={Dimensions.get("screen").width} // from react-native
+                    height={Dimensions.get("window").height / 2}
+                    yAxisSuffix={` ${unit}   `}
+                    yAxisInterval={1} // optional, defaults to 1
+                    yLabelsOffset={0.1}
+                    withInnerLines={false}
+                    withOuterLines={false}
+                    bezier
+                    withDots={true}
+                    chartConfig={{
+                        backgroundGradientFrom: "rgba(255, 255, 255, 0)",
+                        backgroundGradientFromOpacity: 0,
+                        backgroundGradientToOpacity: 0,
+                        backgroundGradientTo: "rgba(255, 255, 255, 0)",
+                        decimalPlaces: 0, // optional, defaults to 2dp
+                        color: (opacity = 1) =>
+                            `rgba(${
+                                colorMode === "light"
+                                    ? "19, 61, 80"
+                                    : "151, 241, 251"
+                            }, ${opacity})`,
+                        labelColor: (opacity = 1) =>
+                            `rgba(${
+                                colorMode === "light"
+                                    ? "19, 61, 80"
+                                    : "151, 241, 251"
+                            }, ${opacity})`,
+                        propsForDots: {
+                            r: "6",
+                            strokeWidth: "2",
+                        },
+                    }}
+                />
+            </View>
+        </VStack>
     );
-}
-
+};
 export default Visual;
 
 //*added graph
