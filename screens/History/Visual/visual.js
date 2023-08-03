@@ -1,7 +1,7 @@
 //Merging to main
 
 import { Text } from "native-base";
-import React from "react";
+import React, { memo } from "react";
 import { SafeAreaView, View } from "react-native";
 import styles from "./styles";
 import { useEffect } from "react";
@@ -25,21 +25,29 @@ import AppContext from "../../../Context/AppContext";
 import { LineChart, BarChart } from "react-native-chart-kit";
 import { Dimensions } from "react-native";
 
-const Visual = () => {
+const Visual = (props) => {
+    console.log("props", props);
     const [linedata, setLinedata] = React.useState([]);
     const [lineLabels, setLineLabels] = React.useState([]);
     const [weeklyAverage, setWeeklyAverage] = React.useState(0);
-    const { unit, colorMode, textColor, alternateTextColor, renderValue } =
-        React.useContext(AppContext);
+    const isFocused = useIsFocused();
+    const [mainData, setMainData] = React.useState(props.data);
+    const {
+        unit,
+        colorMode,
+        textColor,
+        alternateTextColor,
+        renderValue,
+        appState,
+    } = React.useContext(AppContext);
 
     React.useEffect(() => {
+        console.log("data", props.data);
         async function fetchData() {
-            const data = await graphData();
-            console.log(data);
-            const intake = data.map((item) =>
-                parseInt(renderValue(item.intake))
-            );
+            const data = props.data;
+
             const date = data.map((item) => item.date.slice(3, 10));
+            const intake = data.map((item) => item.intake);
             let totalWeeklyIntake = 0;
             intake.forEach((item) => {
                 totalWeeklyIntake += item;
@@ -57,13 +65,21 @@ const Visual = () => {
 
     return (
         <VStack>
-            <View>
+            <View
+                style={{
+                    marginHorizontal: 10,
+                }}
+            >
                 <Text fontSize={"md"} color={textColor}>
                     Weekly Average{" "}
                 </Text>
                 <Heading color={alternateTextColor} size={"md"}>
                     {weeklyAverage.toFixed(1)}{" "}
-                    <Text fontSize={"md"} color={textColor}>
+                    <Text
+                        fontWeight={"normal"}
+                        fontSize={"md"}
+                        color={textColor}
+                    >
                         {unit}
                     </Text>
                 </Heading>
@@ -73,6 +89,7 @@ const Visual = () => {
                 <LineChart
                     style={{
                         marginVertical: 8,
+                        // marginHorizontal: 5,
                     }}
                     data={{
                         labels: lineLabels,
@@ -84,12 +101,13 @@ const Visual = () => {
                     }}
                     fromZero={true}
                     width={Dimensions.get("screen").width} // from react-native
-                    height={Dimensions.get("window").height / 2}
+                    height={Dimensions.get("window").height / 2.5}
                     yAxisSuffix={` ${unit}   `}
                     yAxisInterval={1} // optional, defaults to 1
                     yLabelsOffset={0.1}
-                    withInnerLines={false}
+                    // withInnerLines={false}
                     withOuterLines={false}
+                    withHorizontalLines={false}
                     bezier
                     withDots={true}
                     chartConfig={{
@@ -120,6 +138,6 @@ const Visual = () => {
         </VStack>
     );
 };
-export default Visual;
+export default memo(Visual);
 
 //*added graph
