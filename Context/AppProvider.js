@@ -50,7 +50,6 @@ function AppProvider({ children }) {
             setTextColor("white");
             setStatusBarColor("light");
         } else {
-            console.log("light mode");
             const setLightMode = async () => {
                 await AsyncStorage.setItem("theme", "light");
             };

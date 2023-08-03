@@ -47,7 +47,11 @@ function Wrapper() {
     const { statusBarColor } = React.useContext(AppContext);
     return (
         firstLaunch != null && (
-            <Stack.Navigator>
+            <Stack.Navigator
+                screenOptions={{
+                    cardStyle: { backgroundColor: "red" },
+                }}
+            >
                 {firstLaunch && (
                     <Stack.Screen
                         options={{ headerShown: false }}

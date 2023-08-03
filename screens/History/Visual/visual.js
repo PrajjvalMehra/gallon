@@ -26,7 +26,6 @@ import { LineChart, BarChart } from "react-native-chart-kit";
 import { Dimensions } from "react-native";
 
 const Visual = (props) => {
-    console.log("props", props);
     const [linedata, setLinedata] = React.useState([]);
     const [lineLabels, setLineLabels] = React.useState([]);
     const [weeklyAverage, setWeeklyAverage] = React.useState(0);
@@ -42,7 +41,6 @@ const Visual = (props) => {
     } = React.useContext(AppContext);
 
     React.useEffect(() => {
-        console.log("data", props.data);
         async function fetchData() {
             const data = props.data;
 
@@ -52,8 +50,6 @@ const Visual = (props) => {
             intake.forEach((item) => {
                 totalWeeklyIntake += item;
             });
-            console.log(totalWeeklyIntake);
-            console.log(intake.length);
             setWeeklyAverage(
                 totalWeeklyIntake / (intake.length > 6 ? 7 : intake.length)
             );
@@ -85,56 +81,56 @@ const Visual = (props) => {
                 </Heading>
             </View>
 
-            <View>
-                <LineChart
-                    style={{
-                        marginVertical: 8,
-                        // marginHorizontal: 5,
-                    }}
-                    data={{
-                        labels: lineLabels,
-                        datasets: [
-                            {
-                                data: linedata,
-                            },
-                        ],
-                    }}
-                    fromZero={true}
-                    width={Dimensions.get("screen").width} // from react-native
-                    height={Dimensions.get("window").height / 2.5}
-                    yAxisSuffix={` ${unit}   `}
-                    yAxisInterval={1} // optional, defaults to 1
-                    yLabelsOffset={0.1}
-                    // withInnerLines={false}
-                    withOuterLines={false}
-                    withHorizontalLines={false}
-                    bezier
-                    withDots={true}
-                    chartConfig={{
-                        backgroundGradientFrom: "rgba(255, 255, 255, 0)",
-                        backgroundGradientFromOpacity: 0,
-                        backgroundGradientToOpacity: 0,
-                        backgroundGradientTo: "rgba(255, 255, 255, 0)",
-                        decimalPlaces: 0, // optional, defaults to 2dp
-                        color: (opacity = 1) =>
-                            `rgba(${
-                                colorMode === "light"
-                                    ? "19, 61, 80"
-                                    : "151, 241, 251"
-                            }, ${opacity})`,
-                        labelColor: (opacity = 1) =>
-                            `rgba(${
-                                colorMode === "light"
-                                    ? "19, 61, 80"
-                                    : "151, 241, 251"
-                            }, ${opacity})`,
-                        propsForDots: {
-                            r: "6",
-                            strokeWidth: "2",
+            {/* <View> */}
+            <LineChart
+                style={{
+                    marginVertical: 8,
+                    // marginHorizontal: 5,
+                }}
+                data={{
+                    labels: lineLabels,
+                    datasets: [
+                        {
+                            data: linedata,
                         },
-                    }}
-                />
-            </View>
+                    ],
+                }}
+                fromZero={true}
+                width={Dimensions.get("screen").width} // from react-native
+                height={Dimensions.get("window").height / 2.5}
+                yAxisSuffix={`  `}
+                yAxisInterval={1} // optional, defaults to 1
+                // yLabelsOffset={0.1}
+                // withInnerLines={false}
+                withOuterLines={false}
+                withHorizontalLines={false}
+                bezier
+                withDots={true}
+                chartConfig={{
+                    backgroundGradientFrom: "rgba(255, 255, 255, 0)",
+                    backgroundGradientFromOpacity: 0,
+                    backgroundGradientToOpacity: 0,
+                    backgroundGradientTo: "rgba(255, 255, 255, 0)",
+                    decimalPlaces: 0, // optional, defaults to 2dp
+                    color: (opacity = 1) =>
+                        `rgba(${
+                            colorMode === "light"
+                                ? "19, 61, 80"
+                                : "151, 241, 251"
+                        }, ${opacity})`,
+                    labelColor: (opacity = 1) =>
+                        `rgba(${
+                            colorMode === "light"
+                                ? "19, 61, 80"
+                                : "151, 241, 251"
+                        }, ${opacity})`,
+                    propsForDots: {
+                        r: "6",
+                        strokeWidth: "2",
+                    },
+                }}
+            />
+            {/* </View> */}
         </VStack>
     );
 };

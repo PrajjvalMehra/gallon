@@ -51,7 +51,7 @@ function Logs({ data }) {
     );
 
     return (
-        <ScrollView style={{ backgroundColor: mainBgColor, height: "100%" }}>
+        <ScrollView style={{ backgroundColor: mainBgColor }}>
             {logs?.map((item, key) => (
                 <Stack key={key} space={3} alignItems="center">
                     <HStack space={3} alignItems="center" mt="5">

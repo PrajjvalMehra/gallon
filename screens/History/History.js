@@ -29,18 +29,17 @@ function History() {
     React.useEffect(() => {
         async function fetchData() {
             const result = await graphData();
-            console.log("result", typeof result);
             setData(result);
         }
         fetchData();
     }, []);
 
     return (
-        <ScrollView>
+        <ScrollView backgroundColor={mainBgColor}>
             <View
                 justifyContent={"center"}
                 style={{
-                    height: Dimensions.get("window").height - 150,
+                    // height: Dimensions.get("window").height - 150,
                     paddingTop: 15,
                     backgroundColor: mainBgColor,
                 }}
