@@ -35,20 +35,17 @@ function Logs({ data }) {
     } = React.useContext(AppContext);
     const isFocused = useIsFocused();
 
-    React.useEffect(
-        () => {
-            createTodayRow();
-            if (isFocused) {
-                async function fetchGoal() {
-                    const data = await getGoal();
-                    setGoal(data);
-                }
-                fetchGoal();
+    React.useEffect(() => {
+        createTodayRow();
+        if (isFocused) {
+            setLogs(data);
+            async function fetchGoal() {
+                const data = await getGoal();
+                setGoal(data);
             }
-        },
-        [isFocused],
-        appState
-    );
+            fetchGoal();
+        }
+    }, [isFocused, appState, data]);
 
     return (
         <ScrollView style={{ backgroundColor: mainBgColor }}>
@@ -99,4 +96,4 @@ function Logs({ data }) {
     );
 }
 
-export default memo(Logs);
+export default Logs;

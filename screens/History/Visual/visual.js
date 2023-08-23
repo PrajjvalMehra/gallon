@@ -44,7 +44,7 @@ const Visual = (props) => {
             const data = props.data;
 
             const date = data.map((item) => item.date.slice(3, 10));
-            const intake = data.map((item) => item.intake);
+            const intake = data.map((item) => renderValue(item.intake));
             let totalWeeklyIntake = 0;
             intake.forEach((item) => {
                 totalWeeklyIntake += item;
@@ -56,7 +56,7 @@ const Visual = (props) => {
             setLinedata(intake);
         }
         fetchData();
-    }, []);
+    }, [props.data, appState]);
 
     return (
         <VStack>
@@ -69,7 +69,7 @@ const Visual = (props) => {
                     Weekly Average{" "}
                 </Text>
                 <Heading color={alternateTextColor} size={"md"}>
-                    {weeklyAverage.toFixed(1)}{" "}
+                    {renderValue(weeklyAverage.toFixed(1))}{" "}
                     <Text
                         fontWeight={"normal"}
                         fontSize={"md"}
@@ -95,12 +95,9 @@ const Visual = (props) => {
                             ],
                         }}
                         fromZero={true}
-                        width={Dimensions.get("screen").width} // from react-native
+                        width={Dimensions.get("screen").width}
                         height={Dimensions.get("window").height / 2.5}
                         yAxisSuffix={`  `}
-                        // yAxisInterval={1} // optional, defaults to 1
-                        // yLabelsOffset={0.1}
-                        // withInnerLines={false}
                         withOuterLines={false}
                         withHorizontalLines={false}
                         bezier
@@ -134,6 +131,6 @@ const Visual = (props) => {
         </VStack>
     );
 };
-export default memo(Visual);
+export default Visual;
 
 //*added graph

@@ -7,7 +7,6 @@ import SwitchSelector from "react-native-switch-selector";
 import AppContext from "../../Context/AppContext";
 import { useIsFocused } from "@react-navigation/native";
 import { graphData } from "../../queries/historyQueries";
-
 function History() {
     const options = [
         {
@@ -32,7 +31,7 @@ function History() {
             setData(result);
         }
         fetchData();
-    }, []);
+    }, [isFocused, appState]);
 
     return (
         <ScrollView backgroundColor={mainBgColor}>
