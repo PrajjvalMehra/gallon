@@ -15,7 +15,10 @@
     },
     "production": {
       "android": {
-        "buildType": "apk"
+        "buildType": "app-bundle"
+      },
+      "env": {
+        "ANDROID_SDK_ROOT": "/Users/prajjvalmehra/Library/Android/sdk"
       }
     }
   },

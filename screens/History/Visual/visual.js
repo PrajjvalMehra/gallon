@@ -30,7 +30,6 @@ const Visual = (props) => {
     const [lineLabels, setLineLabels] = React.useState([]);
     const [weeklyAverage, setWeeklyAverage] = React.useState(0);
     const isFocused = useIsFocused();
-    const [mainData, setMainData] = React.useState(props.data);
     const {
         unit,
         colorMode,
@@ -80,57 +79,58 @@ const Visual = (props) => {
                     </Text>
                 </Heading>
             </View>
-
-            {/* <View> */}
-            <LineChart
-                style={{
-                    marginVertical: 8,
-                    // marginHorizontal: 5,
-                }}
-                data={{
-                    labels: lineLabels,
-                    datasets: [
-                        {
-                            data: linedata,
-                        },
-                    ],
-                }}
-                fromZero={true}
-                width={Dimensions.get("screen").width} // from react-native
-                height={Dimensions.get("window").height / 2.5}
-                yAxisSuffix={`  `}
-                yAxisInterval={1} // optional, defaults to 1
-                // yLabelsOffset={0.1}
-                // withInnerLines={false}
-                withOuterLines={false}
-                withHorizontalLines={false}
-                bezier
-                withDots={true}
-                chartConfig={{
-                    backgroundGradientFrom: "rgba(255, 255, 255, 0)",
-                    backgroundGradientFromOpacity: 0,
-                    backgroundGradientToOpacity: 0,
-                    backgroundGradientTo: "rgba(255, 255, 255, 0)",
-                    decimalPlaces: 0, // optional, defaults to 2dp
-                    color: (opacity = 1) =>
-                        `rgba(${
-                            colorMode === "light"
-                                ? "19, 61, 80"
-                                : "151, 241, 251"
-                        }, ${opacity})`,
-                    labelColor: (opacity = 1) =>
-                        `rgba(${
-                            colorMode === "light"
-                                ? "19, 61, 80"
-                                : "151, 241, 251"
-                        }, ${opacity})`,
-                    propsForDots: {
-                        r: "6",
-                        strokeWidth: "2",
-                    },
-                }}
-            />
-            {/* </View> */}
+            <View style={{ marginBottom: -30 }}>
+                {linedata.length === 0 ? null : (
+                    <LineChart
+                        style={{
+                            marginTop: 10,
+                            // marginHorizontal: 5,
+                        }}
+                        data={{
+                            labels: lineLabels,
+                            datasets: [
+                                {
+                                    data: linedata,
+                                },
+                            ],
+                        }}
+                        fromZero={true}
+                        width={Dimensions.get("screen").width} // from react-native
+                        height={Dimensions.get("window").height / 2.5}
+                        yAxisSuffix={`  `}
+                        // yAxisInterval={1} // optional, defaults to 1
+                        // yLabelsOffset={0.1}
+                        // withInnerLines={false}
+                        withOuterLines={false}
+                        withHorizontalLines={false}
+                        bezier
+                        withDots={true}
+                        chartConfig={{
+                            backgroundGradientFrom: "rgba(255, 255, 255, 0)",
+                            backgroundGradientFromOpacity: 0,
+                            backgroundGradientToOpacity: 0,
+                            backgroundGradientTo: "rgba(255, 255, 255, 1)",
+                            decimalPlaces: 0, // optional, defaults to 2dp
+                            color: (opacity = 1) =>
+                                `rgba(${
+                                    colorMode === "light"
+                                        ? "19, 61, 80"
+                                        : "151, 241, 251"
+                                }, ${opacity})`,
+                            labelColor: (opacity = 1) =>
+                                `rgba(${
+                                    colorMode === "light"
+                                        ? "19, 61, 80"
+                                        : "151, 241, 251"
+                                }, ${opacity})`,
+                            propsForDots: {
+                                r: "6",
+                                strokeWidth: "2",
+                            },
+                        }}
+                    />
+                )}
+            </View>
         </VStack>
     );
 };

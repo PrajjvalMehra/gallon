@@ -23,8 +23,9 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.daddyg09.gallon",
-      "googleServicesFile": "./google-services.json"
+      "package": "com.prajjvalmehra.gallon",
+      "googleServicesFile": "./google-services.json",
+      "versionCode": 1
     },
     "web": {
       "favicon": "./assets/favicon.png"
