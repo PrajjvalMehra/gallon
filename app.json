@@ -2,7 +2,7 @@
   "expo": {
     "name": "gallon",
     "slug": "gallon",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/ic_launcher.png",
     "userInterfaceStyle": "light",
@@ -25,7 +25,7 @@
       },
       "package": "com.daddyg09.gallon",
       "googleServicesFile": "./google-services.json",
-      "versionCode": 1
+      "versionCode": 2
     },
     "web": {
       "favicon": "./assets/favicon.png"
