@@ -2,7 +2,7 @@
   "expo": {
     "name": "gallon",
     "slug": "gallon",
-    "version": "1.0.1",
+    "version": "1.0.3",
     "orientation": "portrait",
     "icon": "./assets/ic_launcher.png",
     "userInterfaceStyle": "light",
@@ -25,7 +25,7 @@
       },
       "package": "com.daddyg09.gallon",
       "googleServicesFile": "./google-services.json",
-      "versionCode": 2
+      "versionCode": 3
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -43,6 +43,12 @@
           "color": "#ffffff"
         }
       ]
-    ]
+    ],
+    "runtimeVersion": {
+      "policy": "sdkVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/27ae8fe5-4ff6-452c-a9d1-10f13aa95004"
+    }
   }
 }

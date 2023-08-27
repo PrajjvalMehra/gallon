@@ -50,7 +50,7 @@ yarn-error.log
 *.jsbundle
 
 gallonServiceKey.json
-
+/android
 # CocoaPods
 /ios/Pods/
 

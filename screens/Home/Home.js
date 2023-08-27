@@ -16,7 +16,7 @@ import {
 import { checkOnboarding, setOnboardung } from "../../utils/asyncStorage";
 import { AnimatedCircularProgress } from "react-native-circular-progress";
 import React from "react";
-import { StyleSheet } from "react-native";
+import { Animated, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { unitValueDisplay } from "../../utils/helpers";
 import { getUnit, getGoal } from "../../utils/asyncStorage";
@@ -29,34 +29,30 @@ import { Keyboard, Platform, KeyboardEvent } from "react-native";
 import { parse } from "expo-linking";
 import { useIsFocused } from "@react-navigation/native";
 import PersonalizedIntake from "../../components/PersonalizedIntake/Personalized";
+import ModifyGoal from "../../components/ModifyGoal/ModifyGoal";
 
 const useKeyboardBottomInset = () => {
     const [bottom, setBottom] = React.useState(0);
+
     const subscriptions = React.useRef([]);
 
     React.useEffect(() => {
-        function onKeyboardChange(e) {
-            if (
-                e.startCoordinates &&
-                e.endCoordinates.screenY < e.startCoordinates.screenY
-            )
-                setBottom(e.endCoordinates.height);
-            else setBottom(0);
-        }
+        subscriptions.current = [
+            Keyboard.addListener("keyboardDidHide", (e) => setBottom(0)),
+            Keyboard.addListener("keyboardDidShow", (e) => {
+                if (Platform.OS === "android") {
+                    setBottom(e.endCoordinates.height);
+                } else {
+                    setBottom(
+                        Math.max(
+                            e.startCoordinates.height,
+                            e.endCoordinates.height
+                        )
+                    );
+                }
+            }),
+        ];
 
-        if (Platform.OS === "ios") {
-            subscriptions.current = [
-                Keyboard.addListener(
-                    "keyboardWillChangeFrame",
-                    onKeyboardChange
-                ),
-            ];
-        } else {
-            subscriptions.current = [
-                Keyboard.addListener("keyboardDidHide", onKeyboardChange),
-                Keyboard.addListener("keyboardDidShow", onKeyboardChange),
-            ];
-        }
         return () => {
             subscriptions.current.forEach((subscription) => {
                 subscription.remove();
@@ -78,6 +74,8 @@ function Home() {
     const [progress, setProgress] = React.useState(2);
     const { isOpen, onOpen, onClose } = useDisclose();
     const [firstLaunch, setFirstLaunch] = React.useState(null);
+    const bottomInset = useKeyboardBottomInset();
+    const bottomAni = React.useRef(new Animated.Value(bottomInset)).current;
 
     React.useEffect(() => {
         if (!isOpen) Keyboard.dismiss();
@@ -132,16 +130,12 @@ function Home() {
         setProgress(progress + toInt);
     };
 
-    const bottomInset = useKeyboardBottomInset();
-
     return (
-        <KeyboardAvoidingView
-            behavior={Platform.OS === "ios" ? "padding" : "height"}
-        >
+        <SafeAreaView behavior={Platform.OS === "ios" ? "padding" : "height"}>
             {loading ? (
                 <Spinner />
             ) : (
-                <ScrollView
+                <View
                     style={[
                         styles.container,
                         {
@@ -287,32 +281,35 @@ function Home() {
                                 </Text>
                             </VStack>
                         </View>
-                    </VStack>
-                    <Actionsheet size="full" isOpen={isOpen} onClose={onClose}>
-                        <Actionsheet.Content
-                            bottom={bottomInset}
-                            style={{
-                                backgroundColor:
-                                    colorMode === "light" ? "white" : "#164e63",
+                        <Actionsheet
+                            isOpen={isOpen}
+                            onClose={() => {
+                                Keyboard.dismiss();
+                                onClose();
                             }}
                         >
-                            <View width={"100%"} padding={2}>
-                                {!firstLaunch && (
-                                    <CustomIntake
-                                        increaseProgress={increaseProgress}
-                                        onClose={() => {
-                                            onClose();
-                                            Keyboard.dismiss();
-                                        }}
-                                    />
-                                )}
-                                {actionElement}
-                            </View>
-                        </Actionsheet.Content>
-                    </Actionsheet>
-                </ScrollView>
+                            <Animated.View style={{ width: "100%" }}>
+                                <Actionsheet.Content
+                                    style={{ bottom: bottomInset }}
+                                    backgroundColor={
+                                        colorMode === "dark"
+                                            ? "primary.900"
+                                            : "white"
+                                    }
+                                >
+                                    <View width={"100%"} padding={2}>
+                                        <CustomIntake
+                                            increaseProgress={increaseProgress}
+                                            onClose={onClose}
+                                        />
+                                    </View>
+                                </Actionsheet.Content>
+                            </Animated.View>
+                        </Actionsheet>
+                    </VStack>
+                </View>
             )}
-        </KeyboardAvoidingView>
+        </SafeAreaView>
     );
 }
 
