@@ -2,7 +2,7 @@ import BottomNavigator from "./components/BottomNavigator/BottomNavigator";
 
 import { NativeBaseProvider } from "native-base";
 import AppContext from "./Context/AppContext";
-import { createTodayRow, testQuery } from "./queries/tableSetup";
+import { createTodayRow } from "./queries/tableSetup";
 import React from "react";
 
 import {
@@ -33,7 +33,6 @@ function Wrapper() {
                 setFirstLaunch(false);
                 await setOnboardung();
                 createTodayRow();
-                testQuery();
             } else {
                 setFirstLaunch(false);
             }

@@ -25,14 +25,6 @@ const increaseIntake = async (value) => {
     await AsyncStorage.setItem("userData", JSON.stringify(parsedData));
 
     return;
-    const unit = await AsyncStorage.getItem("unit");
-    value = unit === "fl oz" ? value * 0.033814 * 29.574 : value;
-    await db.transaction((tx) => {
-        tx.executeSql("UPDATE data SET intake = intake + ? WHERE date = ?", [
-            value,
-            date,
-        ]);
-    });
 };
 
 export { fetchIntake, increaseIntake };
