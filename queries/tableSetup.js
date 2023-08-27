@@ -1,13 +1,4 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { db } from "../utils/db";
-
-const dbSetup = () => {
-    db.transaction((tx) => {
-        tx.executeSql(
-            "CREATE TABLE IF NOT EXISTS data (id INTEGER PRIMARY KEY AUTOINCREMENT, date TEXT, intake INTEGER, goal INTEGER);"
-        );
-    });
-};
 
 const createTodayRow = async () => {
     let date = new Date();
@@ -105,11 +96,4 @@ const executeQuery = (sql, params) => {
     });
 };
 
-export {
-    dbSetup,
-    createTodayRow,
-    testQuery,
-    testQuery2,
-    executeQuery,
-    dropTable,
-};
+export { createTodayRow, testQuery, testQuery2, executeQuery, dropTable };

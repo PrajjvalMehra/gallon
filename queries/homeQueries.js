@@ -1,5 +1,4 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { db } from "../utils/db";
 
 const fetchIntake = async () => {
     let date = new Date();
@@ -11,23 +10,6 @@ const fetchIntake = async () => {
     const todayData = parsedData.find((item) => item.date === date);
     if (todayData === undefined) return 0;
     return todayData.intake;
-
-    return new Promise(async (resolve, reject) => {
-        try {
-            await db.transaction((tx) => {
-                tx.executeSql(
-                    "SELECT * FROM data ORDER BY id DESC LIMIT 1",
-                    [date, "0"],
-                    (_, { rows }) => {
-                        console.log(rows._array[0].intake);
-                        resolve(rows._array[0].intake);
-                    }
-                );
-            });
-        } catch (error) {
-            reject(error);
-        }
-    });
 };
 
 const increaseIntake = async (value) => {
