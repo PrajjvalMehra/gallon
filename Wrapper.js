@@ -2,7 +2,7 @@ import BottomNavigator from "./components/BottomNavigator/BottomNavigator";
 
 import { NativeBaseProvider } from "native-base";
 import AppContext from "./Context/AppContext";
-import { dbSetup, createTodayRow, testQuery } from "./queries/tableSetup";
+import { createTodayRow, testQuery } from "./queries/tableSetup";
 import React from "react";
 
 import {
@@ -40,8 +40,6 @@ function Wrapper() {
         }
 
         fetchOnboardingData();
-
-        dbSetup();
     }, [appState]);
 
     const { statusBarColor } = React.useContext(AppContext);

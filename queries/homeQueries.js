@@ -1,5 +1,4 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { db } from "../utils/db";
 
 const fetchIntake = async () => {
     let date = new Date();
