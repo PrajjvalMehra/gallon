@@ -38,7 +38,6 @@ function DynamicNotification(props) {
     }, []);
 
     const checkInterval = async () => {
-        console.log("checking interval");
         const data = await Notifications.getAllScheduledNotificationsAsync();
         if (data.length === 0) {
             setNotificationInterval(60);
@@ -52,13 +51,11 @@ function DynamicNotification(props) {
     };
 
     const subscribeToNotifications = async (interval) => {
-        console.log("interval", interval);
         await Notifications.cancelAllScheduledNotificationsAsync();
         setNotificationEnabled(false);
         registerForPushNotificationsAsync()
             .then((token) => {
                 setExpoPushToken(token);
-                console.log("token", token);
                 if (token === undefined) {
                     setNotificationEnabled(false);
                 }
@@ -157,7 +154,6 @@ function DynamicNotification(props) {
                         [
                             {
                                 text: "Cancel",
-                                onPress: () => console.log("Cancel Pressed"),
                                 style: "destructive",
                             },
                             {
@@ -189,7 +185,6 @@ function DynamicNotification(props) {
                         [
                             {
                                 text: "Cancel",
-                                onPress: () => console.log("Cancel Pressed"),
                                 style: "destructive",
                             },
                             {
@@ -247,7 +242,6 @@ async function schedulePushNotification(time, day) {
             repeats: true,
         },
     });
-    console.log("notif id on scheduling", id);
     return id;
 }
 
@@ -266,7 +260,6 @@ async function registerForPushNotificationsAsync() {
         return;
     }
     token = (await Notifications.getExpoPushTokenAsync()).data;
-    console.log(token);
 
     if (Platform.OS === "android") {
         Notifications.setNotificationChannelAsync("default", {

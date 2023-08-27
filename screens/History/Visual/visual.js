@@ -1,7 +1,7 @@
 //Merging to main
 
 import { Text } from "native-base";
-import React from "react";
+import React, { memo } from "react";
 import { SafeAreaView, View } from "react-native";
 import styles from "./styles";
 import { useEffect } from "react";
@@ -25,149 +25,112 @@ import AppContext from "../../../Context/AppContext";
 import { LineChart, BarChart } from "react-native-chart-kit";
 import { Dimensions } from "react-native";
 
-function Visual() {
-    const screenWidth = Dimensions.get("window").width;
-    const chartConfig = {
-        backgroundGradientFrom: "#164e63",
-        backgroundGradientFromOpacity: 1,
-        backgroundGradientTo: "#164e63",
-        backgroundGradientToOpacity: 1,
-        color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-        strokeWidth: 2, // optional, default 3
-        barPercentage: 0.5,
-        useShadowColorFromDataset: false, // optional
-        propsForLabels: {
-            fontSize: 8,
-        },
-    };
-    const chartConfig2 = {
-        backgroundGradientFrom: "#164e63",
-        backgroundGradientFromOpacity: 1,
-        backgroundGradientTo: "#164e63",
-        backgroundGradientToOpacity: 1,
-        color: (opacity = 1) => `rgba(240, 249, 255, ${opacity})`,
-        strokeWidth: 2, // optional, default 3
-        barPercentage: 0.5,
-        useShadowColorFromDataset: false, // optional
-        propsForLabels: {
-            fontSize: 8,
-        },
-    };
-    const [logs, setLogs] = React.useState([]);
-    const [goal, setGoal] = React.useState(0);
-    const { appState, renderValue, unit, textColor, mainBgColor } =
-        React.useContext(AppContext);
+const Visual = (props) => {
+    const [linedata, setLinedata] = React.useState([]);
+    const [lineLabels, setLineLabels] = React.useState([]);
+    const [weeklyAverage, setWeeklyAverage] = React.useState(0);
     const isFocused = useIsFocused();
+    const {
+        unit,
+        colorMode,
+        textColor,
+        alternateTextColor,
+        renderValue,
+        appState,
+    } = React.useContext(AppContext);
 
-    useEffect(
-        () => {
-            async function fetchLogs() {
-                const data = await graphData();
-                setLogs(data);
-            }
-            async function fetchGoal() {
-                const data = await getGoal();
-                setGoal(data);
-            }
-            fetchGoal();
-            fetchLogs();
-        },
-        [isFocused],
-        appState
-    );
+    React.useEffect(() => {
+        async function fetchData() {
+            const data = props.data;
 
-    const data = {
-        labels: logs
-            .slice(0, 15)
-            .map(
-                (item, key) => item.date.split(" ")[1] + item.date.split(" ")[2]
-            ),
-        datasets: [
-            {
-                data: logs.slice(0, 15).map((item, key) => item.intake),
-                color: (opacity = 1) => `rgba(103, 232, 249, ${opacity})`, // optional
-                strokeWidth: 2, // optional
-            },
-        ],
-    };
-
-    const data2 = {
-        labels: logs
-            .slice(0, 5)
-            .map(
-                (item, key) => item.date.split(" ")[1] + item.date.split(" ")[2]
-            ), // optional
-        datasets: [{ data: logs.slice(0, 5).map((item, key) => item.intake) }],
-    };
-    function graph15Days() {
-        return (
-            <Center style={{ paddingRight: 10, paddingLeft: 10 }}>
-                <LineChart
-                    data={data}
-                    yAxisSuffix={"ml"}
-                    width={screenWidth - 20}
-                    style={{ borderRadius: 16 }}
-                    height={260}
-                    chartConfig={chartConfig}
-                />
-            </Center>
-        );
-    }
-
-    function graph5Days() {
-        return (
-            <Center style={{ paddingRight: 10, paddingLeft: 10 }}>
-                <BarChart
-                    data={data2}
-                    width={screenWidth - 20}
-                    style={{ borderRadius: 16 }}
-                    height={230}
-                    yAxisSuffix="ml"
-                    chartConfig={chartConfig}
-                    verticalLabelRotation={30}
-                />
-            </Center>
-        );
-    }
+            const date = data.map((item) => item.date.slice(3, 10));
+            const intake = data.map((item) => renderValue(item.intake));
+            let totalWeeklyIntake = 0;
+            intake.forEach((item) => {
+                totalWeeklyIntake += item;
+            });
+            setWeeklyAverage(
+                totalWeeklyIntake / (intake.length > 6 ? 7 : intake.length)
+            );
+            setLineLabels(date);
+            setLinedata(intake);
+        }
+        fetchData();
+    }, [props.data, appState]);
 
     return (
-        <ScrollView style={{ backgroundColor: mainBgColor, height: "100%" }}>
-            <Text
-                color={textColor}
+        <VStack>
+            <View
                 style={{
-                    textAlign: "center",
-                    paddingTop: 20,
-                    fontSize: 16,
+                    marginHorizontal: 10,
                 }}
             >
-                5 Days water intake logs
-            </Text>
-            {data2.labels.length > 0 ? (
-                graph5Days()
-            ) : (
-                <Text>No record to show</Text>
-            )}
-
-            <Text
-                color={textColor}
-                style={{
-                    textAlign: "center",
-                    paddingTop: 20,
-                    fontSize: 16,
-                }}
-            >
-                15 Days water intake logs
-            </Text>
-
-            {data.labels.length > 0 ? (
-                graph15Days()
-            ) : (
-                <Text>No record to show</Text>
-            )}
-        </ScrollView>
+                <Text fontSize={"md"} color={textColor}>
+                    Weekly Average{" "}
+                </Text>
+                <Heading color={alternateTextColor} size={"md"}>
+                    {renderValue(weeklyAverage.toFixed(1))}{" "}
+                    <Text
+                        fontWeight={"normal"}
+                        fontSize={"md"}
+                        color={textColor}
+                    >
+                        {unit}
+                    </Text>
+                </Heading>
+            </View>
+            <View style={{ marginBottom: -30 }}>
+                {linedata.length === 0 ? null : (
+                    <LineChart
+                        style={{
+                            marginTop: 10,
+                            // marginHorizontal: 5,
+                        }}
+                        data={{
+                            labels: lineLabels,
+                            datasets: [
+                                {
+                                    data: linedata,
+                                },
+                            ],
+                        }}
+                        fromZero={true}
+                        width={Dimensions.get("screen").width}
+                        height={Dimensions.get("window").height / 2.5}
+                        yAxisSuffix={`  `}
+                        withOuterLines={false}
+                        withHorizontalLines={false}
+                        bezier
+                        withDots={true}
+                        chartConfig={{
+                            backgroundGradientFrom: "rgba(255, 255, 255, 0)",
+                            backgroundGradientFromOpacity: 0,
+                            backgroundGradientToOpacity: 0,
+                            backgroundGradientTo: "rgba(255, 255, 255, 1)",
+                            decimalPlaces: 0, // optional, defaults to 2dp
+                            color: (opacity = 1) =>
+                                `rgba(${
+                                    colorMode === "light"
+                                        ? "19, 61, 80"
+                                        : "151, 241, 251"
+                                }, ${opacity})`,
+                            labelColor: (opacity = 1) =>
+                                `rgba(${
+                                    colorMode === "light"
+                                        ? "19, 61, 80"
+                                        : "151, 241, 251"
+                                }, ${opacity})`,
+                            propsForDots: {
+                                r: "6",
+                                strokeWidth: "2",
+                            },
+                        }}
+                    />
+                )}
+            </View>
+        </VStack>
     );
-}
-
+};
 export default Visual;
 
 //*added graph
