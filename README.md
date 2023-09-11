@@ -3,13 +3,8 @@
 A water-tracking mobile application to help users track their daily water intake and stay hydrated. Built using React Native.
 
 ---
-
-# Group 13
-
--   Prajjval Mehra
--   Kris Libre
--   Pemitha Randiya
-
+![Logo](https://play-lh.googleusercontent.com/kja5UT_Ux103Bi28aR4pwMlEyyAt7aw2JjAkAdfDyvT07u6Wkf0g844UfVR8Q4XwriI=w240-h480-rw)
+![Google Play Link](https://play.google.com/store/apps/details?id=com.daddyg09.gallon&hl=en_CA&gl=US)
 ---
 
 # Features
@@ -26,3 +21,9 @@ A water-tracking mobile application to help users track their daily water intake
 -   Reset intake history
 -   Switch between dark and light mode
 -   Offline tracking
+
+---
+-   Prajjval Mehra
+-   Kris Libre
+-   Pemitha Randiya
+
